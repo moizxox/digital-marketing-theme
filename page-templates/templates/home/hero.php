@@ -1,11 +1,5 @@
 <style>
-    a{
-        transition: all 0.3s ease;
-        &:hover{
-            transform: scale(1.05);
-            
-        }
-    }
+    
     .hero-sec{
         background: url('<?php echo get_template_directory_uri(); ?>/images/home/hero-bg.gif') no-repeat center center;
         background-size: cover;
@@ -24,7 +18,7 @@
     }
     
 </style>
-<section class="hero-sec px-3 sm:px-5 py-[120px]  bg-[var(--dark-primary)] text-white"  >
+<section class="hero-sec px-3 sm:px-5 pt-[120px] pb-[160px]  bg-[var(--dark-primary)] text-white"  >
     <section class="flex flex-col gap-[60px] max-w-[1440px] mx-auto">
         <div class="flex flex-col gap-5 items-center">
             <h1 class="text-[40px] font-extrabold text-white text-center">

@@ -901,6 +901,13 @@ jQuery(document).ready(function($) {
 </script>
 
 <style>
+    a{
+        transition: all 0.3s ease;
+        &:hover{
+            transform: scale(1.05);
+            
+        }
+    }
 .swiper-flex-wrap {
     display: flex;
     align-items: center;
