@@ -1,5 +1,6 @@
 <?php if (!defined('ABSPATH')) exit; ?>
-<footer class="my-gradient-background py-[60px] px-3 sm:px-5 ">
+
+<footer class="bg-[var(--primary)] py-[60px] px-3 sm:px-5 ">
     <section class="max-w-[1440px] mx-auto"><div class="flex flex-col lg:flex-row flex-wrap lg:flex-nowrap gap-6 justify-between border-b border-white pb-9">
         <!-- Logo -->
         <div class="w-full lg:w-auto flex justify-center lg:justify-start">

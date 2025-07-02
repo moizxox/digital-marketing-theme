@@ -15,7 +15,6 @@
     <?php wp_enqueue_script('main', WB_THEME_URL . '/js/main.js', array('jquery.formstyler')); ?>
     <?php wp_head(); ?>
     <style>
-        /* Remove underline on hover for all links except main menu */
         body a:hover {
             text-decoration: none ;
         }
@@ -98,7 +97,7 @@
             width: 80%;
             max-width: 320px;
             height: 100vh;
-            background: #0C2452;
+            background: var(--primary);
             z-index: 44;
             transform: translateX(-100%);
             transition: transform 0.3s ease;
@@ -129,7 +128,7 @@
 <body <?php body_class(); ?>>
     <?php if (function_exists('gtm4wp_the_gtm_tag')) gtm4wp_the_gtm_tag(); ?>
     <div class="main-wrap">
-        <header class="flex h-[86px] items-center justify-between px-[10%] bg-[#0C2452] py-4 relative z-50">
+        <header class="flex h-[86px] items-center justify-between px-[10%] bg-[var(--primary)] py-4 relative z-50">
             <a href="<?php echo esc_url(home_url('/')); ?>">
                 <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/logo.png" alt="Logo" class="h-10" />
             </a>
@@ -146,14 +145,11 @@
                 ]);
                 ?>
             </nav>
-            
-            <!-- Compare Button Desktop -->
-            <?php if ($compare_page = wb_get_page_by_template('compare')) : ?>
-                <a href="<?php echo get_permalink($compare_page->ID); ?>" class="hidden lg:flex rounded-sm bg-[#FFCC00] p-3 flex gap-3 items-center ml-4">
-                    <span class="text-[#0C2452] hidden md:block">Compare</span>
-                    <span class="rounded-sm bg-[#0C2452] px-2 py-0.5 text-white text-sm"><?php echo count(Compare::get_ids()); ?></span>
+
+                <a href="#" class="hidden lg:flex rounded-lg bg-[var(--secondary)] px-4 py-2 font-medium flex gap-3 items-center">
+                    <span class="text-[var(--primary)] hidden md:block">Submit Ai Tool</span>
                 </a>
-            <?php endif; ?>
+           
             
             <!-- Mobile Menu Toggle -->
             <button class="lg:hidden ml-4 mobile-menu-button" id="toggle-btn1" aria-label="Menu" aria-expanded="false">
@@ -174,22 +170,14 @@
                     wp_nav_menu([
                         'theme_location' => 'main',
                         'container' => false,
-                        'menu_class' => 'flex flex-col gap-6 text-white',
+                        'menu_class' => 'flex flex-col gap-6 text-white hover:text-[var(--secondary)]',
                         'fallback_cb' => 'wb_nav_main_menu_fallback',
                         'items_wrap' => '<ul class="%2$s">%3$s</ul>',
                     ]);
                     ?>
                 </nav>
                 
-                <!-- Compare Button Mobile -->
-                <?php if ($compare_page) : ?>
-                    <div class="p-6">
-                        <a href="<?php echo get_permalink($compare_page->ID); ?>" class="rounded-sm bg-[#FFCC00] w-full border p-3 flex gap-3 items-center justify-center mt-4">
-                            <span class="text-[#0C2452]">Compare</span>
-                            <span class="rounded-sm bg-[#0C2452] px-2 py-0.5 text-white text-sm"><?php echo count(Compare::get_ids()); ?></span>
-                        </a>
-                    </div>
-                <?php endif; ?>
+            
             </div>
         </div>
         
