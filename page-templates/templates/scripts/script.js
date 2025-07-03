@@ -80,7 +80,7 @@ jQuery(document).ready(function ($) {
                                     <p class="text-white text-[14px] font-normal">${slide.dataset.excerpt}</p>
                                   </div>
                                   <div class="flex items-center gap-2">
-                                    <h4 class="text-white text-[20px] font-semibold grow">${slide.dataset.amount}</h4>
+                                    <h4 class="text-white text-[20px] font-semibold grow">${slide.dataset.amount} ${slide.dataset.currency}</h4>
                                     <a href="${slide.dataset.link}" class=" text-center p-3 rounded-md bg-white border border-[var(--primary)] text-[var(--primary)]">Deploy Agent</a>
                                   </div>
                                 </div>`;
@@ -103,7 +103,6 @@ jQuery(document).ready(function ($) {
       breakpoints: {
         640: { slidesPerView: 2 },
         1024: { slidesPerView: 3 },
-       
       },
     });
   }
@@ -273,9 +272,6 @@ jQuery(document).ready(function ($) {
   // --- AI AGENTS ---
   function showAiAgentsLoading() {}
 
-  // --- AI TOOLS ---
-  function showAiToolsLoading() {}
-
   // --- COURSES ---
   function showCoursesLoading() {}
 
@@ -284,6 +280,9 @@ jQuery(document).ready(function ($) {
 
   // --- CONTENT ---
   function showContentLoading() {}
+
+  // --- AI TOOLS ---
+  function showAiToolsLoading() {}
 
   // --- LOADING ---
   function handlePageLoad() {

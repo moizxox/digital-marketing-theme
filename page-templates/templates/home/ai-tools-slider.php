@@ -36,7 +36,7 @@
               while ($ai_tools->have_posts()):
                 $ai_tools->the_post();
                 ?>
-            <div class="swiper-slide tool-slide">
+            <div class="swiper-slide tool-slide" data-tags="<?php $tags = get_the_terms(get_the_ID(), 'ai-tool-tag'); echo esc_attr($tags && !is_wp_error($tags) ? implode(',', array_map(function($tag) { return $tag->name; }, $tags)) : ''); ?>" data-img="<?php echo esc_url(has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium') : 'https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png'); ?>" data-title="<?php echo esc_attr(get_the_title()); ?>" data-excerpt="<?php echo esc_attr(wp_trim_words(get_the_excerpt(), 20)); ?>" data-link="<?php echo esc_url(get_permalink()); ?>">
               <a href="<?php the_permalink(); ?>" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
                 <div class="flex flex-col flex-1 w-full gap-3">
                   <?php if (has_post_thumbnail()): ?>

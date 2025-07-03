@@ -36,7 +36,9 @@
               while ($ai_agents->have_posts()):
                 $ai_agents->the_post();
                 ?>
-            <div class="swiper-slide tool-slide my-gradient-background p-4 rounded-3xl">
+            <div class="swiper-slide tool-slide my-gradient-background p-4 rounded-3xl" data-amount="<?php $amount = get_post_meta(get_the_ID(), '_amount', true);
+                echo !empty($amount) ? esc_attr($amount) : ''; ?>" data-currency="<?php $currency = get_post_meta(get_the_ID(), '_currency', true);
+                echo !empty($currency) ? esc_attr($currency) : ''; ?>" data-img="<?php echo esc_url(has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium') : 'https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png'); ?>" data-title="<?php echo esc_attr(get_the_title()); ?>" data-excerpt="<?php echo esc_attr(wp_trim_words(get_the_excerpt(), 20)); ?>" data-link="<?php echo esc_url(get_permalink()); ?>">
               <div class="rounded-sm h-full flex flex-col gap-2">
                 <div class="flex flex-col flex-1 w-full gap-3">
                   <?php if (has_post_thumbnail()): ?>
@@ -49,7 +51,9 @@
                   <p class="text-white text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
                 </div >
                 <div class="flex items-center gap-2">
-                  <h4 class="text-white text-[20px] font-semibold grow"><?php echo get_post_meta(get_the_ID(), '_amount', true); ?> <?php echo get_post_meta(get_the_ID(), '_currency', true); ?></h4>
+                  <h4 class="text-white text-[20px] font-semibold grow"><?php $amount = get_post_meta(get_the_ID(), '_amount', true);
+                $currency = get_post_meta(get_the_ID(), '_currency', true);
+                echo !empty($amount) ? esc_html($amount) : 'N/A'; ?> <?php echo !empty($currency) ? esc_html($currency) : ''; ?></h4>
                   
                   <a href="<?php the_permalink(); ?>" class=" text-center p-3 rounded-md bg-white border border-[var(--primary)] text-[var(--primary)]">Deploy Agent</a>
                 </div>
