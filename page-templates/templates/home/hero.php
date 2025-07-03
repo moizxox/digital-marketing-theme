@@ -53,10 +53,10 @@
     </section>
     <section class="max-w-[1440px] mx-auto px-4 md:px-6 py-8 bg-[var(--primary)] rounded-xl flex flex-col gap-6 mt-[55px]">
     <!-- Form -->
-    <form class="flex flex-col gap-5 bg-[#A3F8FF1A] p-6 rounded-lg">
+    <form class="flex flex-col gap-5 bg-[#A3F8FF1A] p-6 rounded-lg" id="searchForm">
         <!-- Search Input & Button -->
         <div class="flex flex-col sm:flex-row gap-3">
-            <input type="text" placeholder="e.g. AI Marketing Tools or Agents"
+            <input  type="text" placeholder="e.g. AI Marketing Tools or Agents"
                 class="w-full p-3 border border-gray-200 rounded-md focus:outline-none text-[var(--primary)]" />
             <button type="submit"
                 class="bg-[var(--secondary)] text-[var(--primary)] py-3 px-4 rounded-md flex items-center justify-center gap-2">
@@ -68,21 +68,21 @@
         </div>
 
         <!-- Radio Filters -->
-        <div class="flex flex-wrap gap-4 justify-center text-white">
+        <div class="flex flex-wrap gap-4 justify-center text-white radio-div">
             <label class="flex items-center gap-2 cursor-pointer" for="tools">
                 <input type="radio" name="type" id="tools" value="tool" class="accent-[#FFCC00]" checked>
                 <span>Tools</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer" for="ai-tools">
-                <input type="radio" name="type" id="ai-tools" value="ai-tools" class="accent-[#FFCC00]">
+                <input type="radio" name="type" id="ai-tools" value="ai-tool" class="accent-[#FFCC00]">
                 <span>AI Tools</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer" for="ai-agents">
-                <input type="radio" name="type" id="ai-agents" value="ai-agents" class="accent-[#FFCC00]">
+                <input type="radio" name="type" id="ai-agents" value="ai-agent" class="accent-[#FFCC00]">
                 <span>AI Agents</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer" for="courses">
-                <input type="radio" name="type" id="courses" value="courses" class="accent-[#FFCC00]">
+                <input type="radio" name="type" id="courses" value="course" class="accent-[#FFCC00]">
                 <span>Courses</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer" for="services">

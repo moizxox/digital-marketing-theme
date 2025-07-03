@@ -61,6 +61,7 @@ if (($popular_terms = wp_cache_get('_popular_terms')) === false) {
     @import url("<?php echo get_template_directory_uri(); ?>/page-templates/templates/css/style.css");
 </style>
 <script src="<?php echo get_template_directory_uri(); ?>/page-templates/templates/scripts/page-load.js"></script>
+<script src="<?php echo get_template_directory_uri(); ?>/page-templates/templates/scripts/searchForm.handler.js"></script>
 
 
 <?php get_footer(); ?>
