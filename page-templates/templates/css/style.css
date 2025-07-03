@@ -4,6 +4,11 @@ a {
     transform: scale(1.05);
   }
 }
+.no-d-hover {
+  &:hover {
+    transform: none;
+  }
+}
 .swiper-flex-wrap {
   display: flex;
   align-items: center;
