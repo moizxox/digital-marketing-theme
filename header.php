@@ -146,7 +146,7 @@
                 ?>
             </nav>
 
-                <a href="#" class="hidden lg:flex rounded-lg bg-[var(--secondary)] px-4 py-2 font-medium flex gap-3 items-center">
+                <a href="<?php echo esc_url(home_url('/submit-ai/')); ?>" class="hidden lg:flex rounded-lg bg-[var(--secondary)] px-4 py-2 font-medium flex gap-3 items-center">
                     <span class="text-[var(--primary)] hidden md:block">Submit Ai Tool</span>
                 </a>
            
