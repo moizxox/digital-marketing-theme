@@ -20,7 +20,7 @@ $pricing_options = wp_get_post_terms($post->ID, 'ai-tool-pricing-option');
 <div class="hero hero_single heading-bg">
 	<div class="container">
 		<div class="hero__inner clearfix">
-			<?php if ($search_page = wb_get_page_by_template('search')) : ?>
+			<?php if ($search_page = wb_get_page_by_template('search')): ?>
 				<form action="<?php echo get_permalink($search_page); ?>" method="get" class="hero-search hero-search_single">
 					<div class="hero-search__input">
 						<input type="text" name="query" class="form-control" placeholder="<?php _e('e.g. AI Writing or Chatbot', 'wb'); ?>">
@@ -41,7 +41,7 @@ $pricing_options = wp_get_post_terms($post->ID, 'ai-tool-pricing-option');
 	<div class="container">
 		<div class="single-heading__inner">
 			<h1 class="single-heading__title text-2xl font-bold"><?php the_title(); ?></h1>
-			<?php if (has_excerpt()) : ?>
+			<?php if (has_excerpt()): ?>
 				<div class="single-heading__excerpt">
 					<?php the_excerpt(); ?>
 				</div>
@@ -57,10 +57,10 @@ $pricing_options = wp_get_post_terms($post->ID, 'ai-tool-pricing-option');
 				<div class="col-md-5">
 					<div class="product__left">
 						<div class="product-box-detail">
-							<?php if (has_post_thumbnail()) : ?>
+							<?php if (has_post_thumbnail()): ?>
 								<div class="product-box-detail__image">
 									<img src="<?php echo wp_get_attachment_image_src(get_post_thumbnail_id(), '480x360')[0]; ?>" srcset="<?php echo wp_get_attachment_image_src(get_post_thumbnail_id(), '480x360')[0]; ?> 1x, <?php echo wb_image(wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0], 960, 720); ?> 2x" alt="<?php the_title(); ?>">
-									<?php if ($logo = get_post_meta($post->ID, '_logo', true)) : ?>
+									<?php if ($logo = get_post_meta($post->ID, '_logo', true)): ?>
 										<div class="product-box-detail__logo">
 											<img src="<?php echo wb_image($logo, 150, 150); ?>" alt="<?php the_title(); ?>">
 										</div>
@@ -69,13 +69,13 @@ $pricing_options = wp_get_post_terms($post->ID, 'ai-tool-pricing-option');
 							<?php endif; ?>
 							<div class="product-box-detail__info">
 								<h2 class="text-md product-box-detail__title"><?php the_title(); ?></h2>
-								<?php if (has_excerpt()) : ?>
+								<?php if (has_excerpt()): ?>
 									<div class="single-heading__excerpt mb-2">
 										<?php the_excerpt(); ?>
 									</div>
 								<?php endif; ?>
 								<ul class="product-box-detail__btns">
-									<?php if ($website_url = get_post_meta($post->ID, '_website_url', true)) : ?>
+									<?php if ($website_url = get_post_meta($post->ID, '_website_url', true)): ?>
 										<li>
 											<a href="<?php echo $website_url; ?>" target="_blank" class="btn btn-green btn-square gtm-visit">
 												<?php _e('Visit Website', 'wb'); ?>
@@ -111,14 +111,14 @@ $pricing_options = wp_get_post_terms($post->ID, 'ai-tool-pricing-option');
 							</div>
 						</div>
 						<div class="row">
-							<?php if ($tags) : ?>
+							<?php if ($tags): ?>
 								<div class="col-lg-6 hidden-md">
 									<div class="product-box-detail__di">
 										<h2 class="text-md product-content__title">
 											<?php _e('Features', 'wb'); ?>
 										</h2>
 										<ul class="product-tag-list">
-											<?php foreach ($tags as $tag) : ?>
+											<?php foreach ($tags as $tag): ?>
 												<li>
 													<a href="<?php echo get_term_link($tag); ?>" class="btn-tag">
 														<?php echo $tag->name; ?>
@@ -132,24 +132,24 @@ $pricing_options = wp_get_post_terms($post->ID, 'ai-tool-pricing-option');
 							<div class="<?php echo $tags ? 'col-lg-6' : 'col-lg-12'; ?>">
 								<div class="product-box-detail__di">
 									<?php $amount = get_post_meta($post->ID, '_amount', true); ?>
-									<?php if ($amount || $pricing_options) : ?>
+									<?php if ($amount || $pricing_options): ?>
 										<h2 class="text-md product-content__title">
 											<?php _e('Pricing', 'wb'); ?>
 										</h2>
 									<?php endif; ?>
-									<?php if ($amount != '') : ?>
+									<?php if ($amount != ''): ?>
 										<div class="price-b product-box-detail__price">
-											<?php if ($amount === '0') : ?>
+											<?php if ($amount === '0'): ?>
 												<?php _e('FREE', 'wb'); ?>
-											<?php else : ?>
+											<?php else: ?>
 												<?php _e('from', 'wb'); ?>
 												<?php echo get_post_meta($post->ID, '_currency', true); ?><?php echo $amount; ?>
 											<?php endif; ?>
 										</div>
 									<?php endif; ?>
-									<?php if ($pricing_options) : ?>
+									<?php if ($pricing_options): ?>
 										<ul class="product-marker-list">
-											<?php foreach ($pricing_options as $pricing_option) : ?>
+											<?php foreach ($pricing_options as $pricing_option): ?>
 												<li>
 													<span><?php echo $pricing_option->name; ?></span>
 												</li>
@@ -164,7 +164,7 @@ $pricing_options = wp_get_post_terms($post->ID, 'ai-tool-pricing-option');
 				<div class="col-md-7">
 					<div class="product__right">
 						<div class="product-info">
-							<?php if ($post->post_content) : ?>
+							<?php if ($post->post_content): ?>
 								<div class="product-content">
 									<h2 class="text-md product-content__title"><?php _e('Description', 'wb'); ?></h2>
 									<?php the_content(); ?>

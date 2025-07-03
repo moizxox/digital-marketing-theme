@@ -1,4 +1,4 @@
-<section class="bg-[#FF92001A] px-3 sm:px-5 py-[80px] relative"  data-aos-delay="100">
+<section class=" px-3 sm:px-5 py-[80px] relative"  data-aos-delay="100">
   <div class="ai-tools-loading-overlay fixed inset-0 flex items-center justify-center bg-white/70 z-50 hidden">
     <div class="banter-loader"><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div></div>
   </div>
@@ -27,31 +27,44 @@
           <div class="swiper-wrapper">
             <?php
             $ai_tools = new WP_Query([
-                'post_type' => 'ai-tool',
-                'posts_per_page' => 12,
-                'orderby' => 'date',
-                'order' => 'DESC',
+              'post_type' => 'ai-tool',
+              'posts_per_page' => 12,
+              'orderby' => 'date',
+              'order' => 'DESC',
             ]);
             if ($ai_tools->have_posts()):
-                while ($ai_tools->have_posts()):
-                    $ai_tools->the_post();
-                    ?>
+              while ($ai_tools->have_posts()):
+                $ai_tools->the_post();
+                ?>
             <div class="swiper-slide tool-slide">
-              <div class="bg-white rounded-sm h-full flex flex-col">
-                <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
+              <a href="<?php the_permalink(); ?>" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
+                <div class="flex flex-col flex-1 w-full gap-3">
                   <?php if (has_post_thumbnail()): ?>
-                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
+                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover rounded-md']); ?>
                   <?php else: ?>
-                    <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
+                    <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover rounded-md" />
                   <?php endif; ?>
-                  <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
-                  <p class="text-[#5A6478] text-center text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+                  <h1 class="text-[#1B1D1F] text-[20px] font-semibold"><?php the_title(); ?></h1>
+                  <p class="text-[#5A6478] text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+                  <div class="ai-tool-features">
+                    <?php
+                    $tags = get_the_terms(get_the_ID(), 'ai-tool-tag');
+                    if ($tags && !is_wp_error($tags)) {
+                      echo '<ul class="feature-list flex gap-2 flex-wrap">';
+                      foreach ($tags as $tag) {
+                        echo '<li class="text-[var(--primary)] bg-[#0F44F31A] p-2 text-[14px] font-normal rounded-full">' . esc_html($tag->name) . '</li>';
+                      }
+                      echo '</ul>';
+                    } else {
+                      echo '<p>No tags available.</p>';
+                    }
+                    ?>  
+                  </div>
                 </div>
-                <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 bg-[var(--primary)] text-white w-full">View Details</a>
-              </div>
+              </a>
             </div>
             <?php endwhile;
-                wp_reset_postdata();
+              wp_reset_postdata();
             else: ?>
             <div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No items found.</div>
             <?php endif; ?>
