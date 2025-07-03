@@ -237,7 +237,13 @@ function filter_tools_by_category()
             $price = get_post_meta(get_the_ID(), '_price', true);
             $price_from = get_post_meta(get_the_ID(), '_price_from', true);
             ?>
-            <div class="swiper-slide tool-slide">
+            <div class="swiper-slide tool-slide"
+                 data-link="<?php the_permalink(); ?>"
+                 data-img="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>"
+                 data-title="<?php the_title(); ?>"
+                 data-excerpt="<?php echo wp_trim_words(get_the_excerpt(), 20); ?>"
+                 data-price="<?php echo $price_from ? '$' . $price_from : '$' . $price; ?>"
+                 data-tags="<?php echo implode(',', wp_list_pluck(get_the_terms(get_the_ID(), 'post_tag'), 'name')); ?>">
                 <div class="bg-white rounded-sm h-full flex flex-col">
                     <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
                         <?php if (has_post_thumbnail()): ?>
@@ -302,7 +308,13 @@ function filter_ai_agents_by_category()
             $price = get_post_meta(get_the_ID(), '_price', true);
             $price_from = get_post_meta(get_the_ID(), '_price_from', true);
             ?>
-            <div class="swiper-slide tool-slide">
+            <div class="swiper-slide tool-slide"
+                 data-link="<?php the_permalink(); ?>"
+                 data-img="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>"
+                 data-title="<?php the_title(); ?>"
+                 data-excerpt="<?php echo wp_trim_words(get_the_excerpt(), 20); ?>"
+                 data-amount="<?php echo $price_from ? '$' . $price_from : '$' . $price; ?>"
+                 data-tags="<?php echo implode(',', wp_list_pluck(get_the_terms(get_the_ID(), 'post_tag'), 'name')); ?>">
                 <div class="bg-white rounded-sm h-full flex flex-col">
                     <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
                         <?php if (has_post_thumbnail()): ?>
@@ -366,7 +378,13 @@ function filter_ai_tools_by_category()
             $price = get_post_meta(get_the_ID(), '_price', true);
             $price_from = get_post_meta(get_the_ID(), '_price_from', true);
             ?>
-            <div class="swiper-slide tool-slide">
+            <div class="swiper-slide tool-slide"
+                 data-link="<?php the_permalink(); ?>"
+                 data-img="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>"
+                 data-title="<?php the_title(); ?>"
+                 data-excerpt="<?php echo wp_trim_words(get_the_excerpt(), 20); ?>"
+                 data-price="<?php echo $price_from ? '$' . $price_from : '$' . $price; ?>"
+                 data-tags="<?php echo implode(',', wp_list_pluck(get_the_terms(get_the_ID(), 'post_tag'), 'name')); ?>">
                 <div class="bg-white rounded-sm h-full flex flex-col">
                     <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
                         <?php if (has_post_thumbnail()): ?>

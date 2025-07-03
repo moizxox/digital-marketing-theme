@@ -39,6 +39,7 @@ if (($popular_terms = wp_cache_get('_popular_terms')) === false) {
 
 
 <?php get_template_part('page-templates/templates/home/ai-agents-slider'); ?>
+<?php get_template_part('page-templates/templates/home/ai-tools-slider'); ?>
 
 <!-- Tools Section -->
 <?php // get_template_part('page-templates/templates/home/tools-slider'); ?>

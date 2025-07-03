@@ -71,6 +71,20 @@ jQuery(document).ready(function ($) {
         .then((html) => {
           document.querySelector(".ai-agents-swiper .swiper-wrapper").innerHTML = html;
           initAiAgentsSwiper();
+          document.querySelectorAll('.ai-agents-swiper .swiper-slide').forEach((slide) => {
+            slide.innerHTML = `<div class="my-gradient-background p-4 rounded-3xl h-full">
+                                  <div class="rounded-sm  flex flex-col gap-2">
+                                    <img src="${slide.dataset.img}" alt="${slide.dataset.title}" class="w-full h-[240px] rounded-md object-cover" />
+                                    <h1 class="text-white text-[20px] font-semibold">${slide.dataset.title}</h1>
+                                    <span class="text-white text-[14px] font-normal">24/7</span>
+                                    <p class="text-white text-[14px] font-normal">${slide.dataset.excerpt}</p>
+                                  </div>
+                                  <div class="flex items-center gap-2">
+                                    <h4 class="text-white text-[20px] font-semibold grow">${slide.dataset.amount}</h4>
+                                    <a href="${slide.dataset.link}" class=" text-center p-3 rounded-md bg-white border border-[var(--primary)] text-[var(--primary)]">Deploy Agent</a>
+                                  </div>
+                                </div>`;
+          });
           hideAiAgentsLoading();
         });
     });
@@ -109,6 +123,20 @@ jQuery(document).ready(function ($) {
         .then((html) => {
           document.querySelector(".ai-tools-swiper .swiper-wrapper").innerHTML = html;
           initAiToolsSwiper();
+          document.querySelectorAll('.ai-tools-swiper .swiper-slide').forEach((slide) => {
+            slide.innerHTML = `<a href="${slide.dataset.link}" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
+                                <div class="flex flex-col flex-1 w-full gap-3">
+                                  <img src="${slide.dataset.img}" alt="${slide.dataset.title}" class="w-full h-[210px] object-cover rounded-md" />
+                                  <h1 class="text-[#1B1D1F] text-[20px] font-semibold">${slide.dataset.title}</h1>
+                                  <p class="text-[#5A6478] text-[14px] font-normal">${slide.dataset.excerpt}</p>
+                                  <div class="ai-tool-features">
+                                    <ul class="feature-list flex gap-2 flex-wrap">
+                                      ${slide.dataset.tags.split(',').map(tag => `<li class="text-[var(--primary)] bg-[#0F44F31A] p-2 text-[14px] font-normal rounded-full">${tag}</li>`).join('')}
+                                    </ul>
+                                  </div>
+                                </div>
+                              </a>`;
+          });
           hideAiToolsLoading();
         });
     });
