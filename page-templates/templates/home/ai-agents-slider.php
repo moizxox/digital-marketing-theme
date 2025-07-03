@@ -27,31 +27,36 @@
           <div class="swiper-wrapper">
             <?php
             $ai_agents = new WP_Query([
-                'post_type' => 'ai-agent',
-                'posts_per_page' => 12,
-                'orderby' => 'date',
-                'order' => 'DESC',
+              'post_type' => 'ai-agent',
+              'posts_per_page' => 12,
+              'orderby' => 'date',
+              'order' => 'DESC',
             ]);
             if ($ai_agents->have_posts()):
-                while ($ai_agents->have_posts()):
-                    $ai_agents->the_post();
-                    ?>
-            <div class="swiper-slide tool-slide">
-              <div class="bg-white rounded-sm h-full flex flex-col">
-                <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
+              while ($ai_agents->have_posts()):
+                $ai_agents->the_post();
+                ?>
+            <div class="swiper-slide tool-slide my-gradient-background p-4 rounded-3xl">
+              <div class="rounded-sm h-full flex flex-col gap-2">
+                <div class="flex flex-col flex-1 w-full gap-3">
                   <?php if (has_post_thumbnail()): ?>
-                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
+                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-[240px] rounded-md object-cover']); ?>
                   <?php else: ?>
-                    <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
+                    <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[240px] rounded-md object-cover" />
                   <?php endif; ?>
-                  <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
-                  <p class="text-[#5A6478] text-center text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+                  <h1 class="text-white text-[20px] font-semibold"><?php the_title(); ?></h1>
+                  <span class="text-white text-[14px] font-normal">24/7</span>
+                  <p class="text-white text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+                </div >
+                <div class="flex items-center gap-2">
+                  <h4 class="text-white text-[20px] font-semibold grow"><?php echo get_post_meta(get_the_ID(), '_amount', true); ?> <?php echo get_post_meta(get_the_ID(), '_currency', true); ?></h4>
+                  
+                  <a href="<?php the_permalink(); ?>" class=" text-center p-3 rounded-md bg-white border border-[var(--primary)] text-[var(--primary)]">Deploy Agent</a>
                 </div>
-                <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 bg-[var(--primary)] text-white w-full">View Details</a>
               </div>
             </div>
             <?php endwhile;
-                wp_reset_postdata();
+              wp_reset_postdata();
             else: ?>
             <div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No items found.</div>
             <?php endif; ?>
