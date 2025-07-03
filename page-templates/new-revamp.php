@@ -5,7 +5,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-
 get_header();
 
 if (($popular_terms = wp_cache_get('_popular_terms')) === false) {
@@ -56,12 +55,12 @@ if (($popular_terms = wp_cache_get('_popular_terms')) === false) {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 <script>var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';</script>
-<script src="<?php echo get_template_directory_uri(); ?>/page-templates/templates/js/script.js"></script>
+<script src="<?php echo get_template_directory_uri(); ?>/page-templates/templates/scripts/script.js"></script>
 
 <style>
     @import url("<?php echo get_template_directory_uri(); ?>/page-templates/templates/css/style.css");
 </style>
-<script src="<?php echo get_template_directory_uri(); ?>/page-templates/templates/js/page-load.js"></script>
+<script src="<?php echo get_template_directory_uri(); ?>/page-templates/templates/scripts/page-load.js"></script>
 
 
 <?php get_footer(); ?>
