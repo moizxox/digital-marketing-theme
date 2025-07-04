@@ -14,9 +14,16 @@ $pricing_options = get_terms(array(
 ));
 
 ?>
+<style>
+	.category-button.active-btn {
+    border-color: var(--primary);
+    color: #fff;
+	background-color: var(--primary);
+  }
+</style>
 
 <section class="py-16 text-white" style="background-color: var(--primary);">
-	<div class="container mx-auto px-4 text-center max-w-4xl">
+	<div class="container mx-auto px-4 text-center max-w-[1280px]">
 		<h1 class="text-4xl font-bold mb-6 text-white"><?php _e('AI Tools', 'wb'); ?></h1>
 		<?php if ($search_page = wb_get_page_by_template('search')): ?>
 			<form action="<?php echo get_permalink($search_page); ?>" method="get" class="flex flex-col sm:flex-row justify-center gap-4">
@@ -29,6 +36,22 @@ $pricing_options = get_terms(array(
 		<?php endif; ?>
 	</div>
 </section>
+
+<div class="py-8 text-center flex overflow-x-auto justify-start max-w-[1280px] mx-auto custom-scroll px-4">
+	<button class="category-button capitalize text-black whitespace-nowrap  px-4 py-2 rounded-lg m-1 border-[3px] text-white active-btn" data-category="">
+		<?php _e('All', 'wb'); ?>
+	</button>
+	<?php
+	$categories = get_terms(array('taxonomy' => 'ai-tool-category', 'hide_empty' => false));
+	$current_cat = $_GET['category'] ?? '';
+	foreach ($categories as $category):
+		$is_active = $current_cat === $category->slug ? 'active-btn text-white' : '';
+		?>
+		<button class="category-button capitalize text-black whitespace-nowrap bg-transparent px-4 py-2 rounded-lg m-1 border-[3px]  <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
+			<?php echo $category->name; ?>
+		</button>
+	<?php endforeach; ?>
+</div>
 
 <main class="py-12">
 	<div class="container mx-auto px-4">
@@ -79,9 +102,9 @@ $pricing_options = get_terms(array(
 			</aside>
 
 			<div class="w-full lg:w-3/4">
-				<div id="results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+				<div id="results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6">
 					<?php
-					$query_args = array_merge($wp_query->query_vars, ['posts_per_page' => 16]);
+					$query_args = array_merge($wp_query->query_vars, ['posts_per_page' => 12]);
 
 					if (!empty($_GET['features'])) {
 						$query_args['tax_query'][] = array(
@@ -120,7 +143,8 @@ $pricing_options = get_terms(array(
 									<p class="text-sm text-gray-600"><?php echo get_the_excerpt(); ?></p>
 								</div>
 							</div>
-						<?php endwhile;
+						<?php
+						endwhile;
 					else:
 						?>
 						<p class="text-center w-full"><?php _e('No tools found.', 'wb'); ?></p>
@@ -137,8 +161,8 @@ $pricing_options = get_terms(array(
 						'end_size' => 1,
 						'mid_size' => 2,
 						'prev_next' => true,
-						'prev_text' => __('« Previous'),
-						'next_text' => __('Next »'),
+						'prev_text' => __('Previous'),
+						'next_text' => __('Next'),
 						'type' => 'array',
 						'add_args' => false,
 					);

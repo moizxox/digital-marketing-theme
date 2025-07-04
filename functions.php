@@ -965,6 +965,15 @@ function ajax_filter_ai_tools() {
         'posts_per_page' => 16,
     );
 
+    // Filter by category
+    if (!empty($_POST['category'])) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'ai-tool-category',
+            'field' => 'slug',
+            'terms' => $_POST['category'],
+        );
+    }
+
     // Filter by features
     if (!empty($_POST['features'])) {
         $args['tax_query'][] = array(
