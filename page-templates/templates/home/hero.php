@@ -18,10 +18,10 @@
 
     }
 </style>
-<section class="hero-sec px-3 sm:px-5 pt-[120px] bg-[var(--dark-primary)] text-white">
+<section class="hero-sec px-3 sm:px-5 pt-[120px] lg:pb-[200px] pb-[120px] bg-[var(--dark-primary)] text-white mb-[180px]">
     <section class="flex flex-col gap-[60px] max-w-[1440px] mx-auto">
         <div class="flex flex-col gap-5 items-center">
-            <h1 class="text-[28px] md:text-[40px] font-extrabold text-white text-center" style="box-shadow: 0px 4px 4px 0px #00000040;">
+            <h1 class="text-[28px] md:text-[40px] font-extrabold text-white text-center" >
                 One Stop Shop For All Your <span class="text-[var(--secondary)]">AI Marketing</span> Needs
             </h1>
             <p class="text-[20px] text-center">Discover cutting-edge AI marketing tools and intelligent agent to transform your marketing strategy and drive unprecedented growth</p>
@@ -51,7 +51,7 @@
             </div>
         </div>
     </section>
-    <section class="max-w-[1440px] mx-auto px-4 md:px-6 py-8 bg-[var(--primary)] rounded-xl flex flex-col gap-6 mt-[55px]">
+    <section class="max-w-[1440px] mx-auto px-4 md:px-6 py-8 bg-[var(--primary)] rounded-xl flex flex-col gap-6 max-lg:mt-[55px] lg:absolute lg:bottom-[-120px] lg:left-1/2 lg:-translate-x-1/2 lg:w-full  ">
     <!-- Form -->
     <form class="flex flex-col gap-5 bg-[#A3F8FF1A] p-6 rounded-lg" id="searchForm">
         <!-- Search Input & Button -->

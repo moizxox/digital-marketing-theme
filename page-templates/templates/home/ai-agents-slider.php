@@ -1,4 +1,10 @@
-<section class="bg-white px-3 sm:px-5 py-[80px] relative"  data-aos-delay="100">
+<style>
+  .ai-agent-slider-main{
+    background: url('<?php echo get_template_directory_uri(); ?>/images/home/agent-slide-bg.png') no-repeat bottom;
+    background-size: cover;
+  }
+</style>
+<section class="ai-agent-slider-main bg-white px-3 sm:px-5 py-[80px] relative"  data-aos-delay="100">
   <div class="ai-agents-loading-overlay fixed inset-0 flex items-center justify-center bg-white/70 z-50 hidden">
     <div class="banter-loader"><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div></div>
   </div>

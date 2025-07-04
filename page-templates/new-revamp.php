@@ -34,27 +34,20 @@ if (($popular_terms = wp_cache_get('_popular_terms')) === false) {
 ?>
 
  
-<!-- New Hero Section -->
-<?php // get_template_part('page-templates/templates/home/hero'); ?>
+<?php
 
+get_template_part('page-templates/templates/home/hero');
+get_template_part('page-templates/templates/home/ai-tools-slider');
+get_template_part('page-templates/templates/home/ai-agents-slider');
+get_template_part('page-templates/templates/home/services-section');
+get_template_part('page-templates/templates/home/tools-slider');
+get_template_part('page-templates/templates/home/courses-slider');
+get_template_part('page-templates/templates/home/services-slider');
+get_template_part('page-templates/templates/home/content-slider');
+get_template_part('page-templates/templates/home/how-it-works');
+get_template_part('page-templates/templates/home/newsletter');
 
-<?php get_template_part('page-templates/templates/home/ai-agents-slider'); ?>
-<?php get_template_part('page-templates/templates/home/ai-tools-slider'); ?>
-
-<!-- Tools Section -->
-<?php // get_template_part('page-templates/templates/home/tools-slider'); ?>
-<!-- Courses Section -->
-<?php // get_template_part('page-templates/templates/home/courses-slider'); ?>
-<!-- Services Section -->
-<?php // get_template_part('page-templates/templates/home/services-slider'); ?>
-<!-- Content Section -->
-<?php // get_template_part('page-templates/templates/home/content-slider'); ?>
-
-<!-- How it Work Section -->
-<?php // get_template_part('page-templates/templates/home/how-it-works'); ?>
-<!-- Newsletter -->
-<?php // get_template_part('page-templates/templates/home/newsletter'); ?>
-
+?>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
