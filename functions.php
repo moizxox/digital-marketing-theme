@@ -942,3 +942,16 @@ function ai_agent_csv_import_page()
     </div>
 <?php
 }
+
+function enqueue_alpinejs()
+{
+    wp_enqueue_script(
+        'alpine-js',
+        'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js',
+        [],
+        null,
+        true
+    );
+}
+
+add_action('wp_enqueue_scripts', 'enqueue_alpinejs');
