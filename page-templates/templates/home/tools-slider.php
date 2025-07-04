@@ -66,7 +66,7 @@
                                 $data_categories = implode(',', array_map('strval', $categories));
                                 ?>
                             <div class="swiper-slide tool-slide <?php echo $category_classes; ?>" data-categories="<?php echo esc_attr($data_categories); ?>">
-                                <div class="bg-white rounded-sm h-full flex flex-col">
+                                <div class="bg-white rounded-xl overflow-hidden h-full flex flex-col">
                                     <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
                                         <?php if (has_post_thumbnail()): ?>
                                             <?php the_post_thumbnail('medium', array('class' => 'w-full h-[210px] object-cover')); ?>
@@ -86,7 +86,7 @@
                                             </h1>
                                         <?php endif; ?>
                                     </div>
-                                    <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 rounded-b-sm bg-[var(--primary)] text-white mt-auto w-full">
+                                    <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 font-bold rounded-b-sm bg-[var(--primary)] text-white mt-auto w-full">
                                         <?php _e('Buy Now', 'wb'); ?>
                                     </a>
                                 </div>

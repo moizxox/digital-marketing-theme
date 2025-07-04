@@ -27,31 +27,33 @@
           <div class="swiper-wrapper">
             <?php
             $contents = new WP_Query([
-                'post_type' => 'post',
-                'posts_per_page' => 12,
-                'orderby' => 'date',
-                'order' => 'DESC',
+              'post_type' => 'post',
+              'posts_per_page' => 12,
+              'orderby' => 'date',
+              'order' => 'DESC',
             ]);
             if ($contents->have_posts()):
-                while ($contents->have_posts()):
-                    $contents->the_post();
-                    ?>
-            <div class="swiper-slide tool-slide">
-              <div class="bg-white rounded-sm h-full flex flex-col">
-                <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
-                  <?php if (has_post_thumbnail()): ?>
-                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
-                  <?php else: ?>
-                    <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
-                  <?php endif; ?>
-                  <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
-                  <p class="text-[#5A6478] text-center text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
-                </div>
-                <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 bg-[var(--primary)] text-white w-full">View Details</a>
-              </div>
+              while ($contents->have_posts()):
+                $contents->the_post();
+                ?>
+            <div class="swiper-slide content-slide">
+            <a href="<?php the_permalink(); ?>" class="bg-white rounded-sm h-full flex flex-col border border-[#C9C9C961] overflow-hidden">
+                    <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
+                        <?php if (has_post_thumbnail()): ?>
+                            <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
+                        <?php else: ?>
+                            <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
+                        <?php endif; ?>
+                        <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
+                        <p class="text-[#5A6478] text-center text-[14px] font-normal">
+                            <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
+                        </p>
+                    </div>
+                    
+                </a>
             </div>
             <?php endwhile;
-                wp_reset_postdata();
+              wp_reset_postdata();
             else: ?>
             <div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No items found.</div>
             <?php endif; ?>

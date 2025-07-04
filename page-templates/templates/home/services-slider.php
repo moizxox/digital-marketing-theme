@@ -1,6 +1,16 @@
-<section class="bg-[#FF92001A] px-3 sm:px-5 py-[80px] relative"  data-aos-delay="100">
+<section class="bg-[#FF92001A] px-3 sm:px-5 py-[80px] relative" data-aos-delay="100">
   <div class="services-loading-overlay fixed inset-0 flex items-center justify-center bg-white/70 z-50 hidden">
-    <div class="banter-loader"><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div></div>
+    <div class="banter-loader">
+      <div class="banter-loader__box"></div>
+      <div class="banter-loader__box"></div>
+      <div class="banter-loader__box"></div>
+      <div class="banter-loader__box"></div>
+      <div class="banter-loader__box"></div>
+      <div class="banter-loader__box"></div>
+      <div class="banter-loader__box"></div>
+      <div class="banter-loader__box"></div>
+      <div class="banter-loader__box"></div>
+    </div>
   </div>
   <section class="max-w-[1440px] mx-auto">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
@@ -27,33 +37,33 @@
           <div class="swiper-wrapper">
             <?php
             $services = new WP_Query([
-                'post_type' => 'service',
-                'posts_per_page' => 12,
-                'orderby' => 'date',
-                'order' => 'DESC',
+              'post_type' => 'service',
+              'posts_per_page' => 12,
+              'orderby' => 'date',
+              'order' => 'DESC',
             ]);
             if ($services->have_posts()):
-                while ($services->have_posts()):
-                    $services->the_post();
-                    ?>
-            <div class="swiper-slide tool-slide">
-              <div class="bg-white rounded-sm h-full flex flex-col">
-                <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
-                  <?php if (has_post_thumbnail()): ?>
-                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
-                  <?php else: ?>
-                    <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
-                  <?php endif; ?>
-                  <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
-                  <p class="text-[#5A6478] text-center text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+              while ($services->have_posts()):
+                $services->the_post();
+                ?>
+                <div class="swiper-slide tool-slide">
+                  <a href="<?php the_permalink(); ?>" class="no-d-hover bg-white rounded-lg h-full flex flex-col overflow-hidden ">
+                    <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
+                      <?php if (has_post_thumbnail()): ?>
+                        <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
+                      <?php else: ?>
+                        <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
+                      <?php endif; ?>
+                      <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
+                      <p class="text-[#5A6478] text-center text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+                    </div>
+
+                  </a>
                 </div>
-                <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 bg-[var(--primary)] text-white w-full">View Details</a>
-              </div>
-            </div>
-            <?php endwhile;
-                wp_reset_postdata();
+              <?php endwhile;
+              wp_reset_postdata();
             else: ?>
-            <div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No items found.</div>
+              <div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No items found.</div>
             <?php endif; ?>
           </div>
         </div>

@@ -240,38 +240,38 @@ function filter_tools_by_category()
 
             ?>
             <div class="swiper-slide tool-slide"
-                 data-link="<?php the_permalink(); ?>"
-                 data-img="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>"
-                 data-title="<?php the_title(); ?>"
-                 data-excerpt="<?php echo wp_trim_words(get_the_excerpt(), 20); ?>"
-                 data-price="<?php echo $price_from ? '$' . $price_from : '$' . $price; ?>"
-                 data-tags="<?php echo esc_attr($tags); ?>">
-                <div class="bg-white rounded-sm h-full flex flex-col">
+                data-link="<?php the_permalink(); ?>"
+                data-img="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>"
+                data-title="<?php the_title(); ?>"
+                data-excerpt="<?php echo wp_trim_words(get_the_excerpt(), 20); ?>"
+                data-price="<?php echo $price_from ? '$' . $price_from : '$' . $price; ?>"
+                data-tags="<?php echo esc_attr($tags); ?>">
+                <div class="bg-white rounded-xl overflow-hidden h-full flex flex-col">
                     <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
                         <?php if (has_post_thumbnail()): ?>
-                            <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
+                            <?php the_post_thumbnail('medium', array('class' => 'w-full h-[210px] object-cover')); ?>
                         <?php else: ?>
                             <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
                         <?php endif; ?>
-                        <h3 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h3>
+                        <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
                         <p class="text-[#5A6478] text-center text-[14px] font-normal">
                             <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
                         </p>
                         <?php if ($price || $price_from): ?>
-                            <h1 class="text-[#1B1D1F] text-[14px] text-center mt-2">
+                            <h1 class="flex gap-2 items-center justify-center text-[#1B1D1F] text-[14px] text-center mt-2">
                                 <?php _e('Price from', 'wb'); ?>
-                                <span class="text-[20px] font-semibold">
+                                <span class="text-[#1B1D1F] text-center text-[20px] font-semibold">
                                     <?php echo $price_from ? '$' . $price_from : '$' . $price; ?>
                                 </span>
                             </h1>
                         <?php endif; ?>
                     </div>
-                    <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 bg-[var(--primary)] text-white w-full">
+                    <a href="<?php the_permalink(); ?>" class="block text-center font-bold py-3.5 rounded-b-sm bg-[var(--primary)] text-white mt-auto w-full">
                         <?php _e('Buy Now', 'wb'); ?>
                     </a>
                 </div>
             </div>
-            <?php
+        <?php
         }
     } else {
         echo '<div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No tools found.</div>';
@@ -311,37 +311,37 @@ function filter_ai_agents_by_category()
             $price_from = get_post_meta(get_the_ID(), '_price_from', true);
             ?>
             <div class="swiper-slide tool-slide"
-                 data-link="<?php the_permalink(); ?>"
-                 data-img="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>"
-                 data-title="<?php the_title(); ?>"
-                 data-excerpt="<?php echo wp_trim_words(get_the_excerpt(), 20); ?>"
-                 data-amount="<?php echo $price_from ? '$' . $price_from : '$' . $price; ?>"
-                 data-tags="<?php echo implode(',', wp_list_pluck(get_the_terms(get_the_ID(), 'post_tag'), 'name')); ?>">
-                 <div class="swiper-slide tool-slide my-gradient-background p-4 rounded-3xl" style="height:100%" data-amount="<?php $amount = get_post_meta(get_the_ID(), '_amount', true);
+                data-link="<?php the_permalink(); ?>"
+                data-img="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>"
+                data-title="<?php the_title(); ?>"
+                data-excerpt="<?php echo wp_trim_words(get_the_excerpt(), 20); ?>"
+                data-amount="<?php echo $price_from ? '$' . $price_from : '$' . $price; ?>"
+                data-tags="<?php echo implode(',', wp_list_pluck(get_the_terms(get_the_ID(), 'post_tag'), 'name')); ?>">
+                <div class="swiper-slide tool-slide my-gradient-background p-4 rounded-3xl" style="height:100%" data-amount="<?php $amount = get_post_meta(get_the_ID(), '_amount', true);
             echo !empty($amount) ? esc_attr($amount) : ''; ?>" data-currency="<?php $currency = get_post_meta(get_the_ID(), '_currency', true);
             echo !empty($currency) ? esc_attr($currency) : ''; ?>" data-img="<?php echo esc_url(has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium') : 'https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png'); ?>" data-title="<?php echo esc_attr(get_the_title()); ?>" data-excerpt="<?php echo esc_attr(wp_trim_words(get_the_excerpt(), 20)); ?>" data-link="<?php echo esc_url(get_permalink()); ?>">
-              <div class="rounded-sm flex flex-col gap-2 h-full justify-between">
-                <div class="flex flex-col flex-1 w-full gap-3">
-                  <?php if (has_post_thumbnail()): ?>
-                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-[240px] rounded-md object-cover']); ?>
-                  <?php else: ?>
-                    <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[240px] rounded-md object-cover" />
-                  <?php endif; ?>
-                  <h1 class="text-white text-[20px] font-semibold"><?php the_title(); ?></h1>
-                  <span class="text-white text-[14px] font-normal">24/7</span>
-                  <p class="text-white text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
-                </div >
-                <div class="flex items-center gap-2">
-                  <h4 class="text-white text-[20px] font-semibold grow"><?php $amount = get_post_meta(get_the_ID(), '_amount', true);
+                    <div class="rounded-sm flex flex-col gap-2 h-full justify-between">
+                        <div class="flex flex-col flex-1 w-full gap-3">
+                            <?php if (has_post_thumbnail()): ?>
+                                <?php the_post_thumbnail('medium', ['class' => 'w-full h-[240px] rounded-md object-cover']); ?>
+                            <?php else: ?>
+                                <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[240px] rounded-md object-cover" />
+                            <?php endif; ?>
+                            <h1 class="text-white text-[20px] font-semibold"><?php the_title(); ?></h1>
+                            <span class="text-white text-[14px] font-normal">24/7</span>
+                            <p class="text-white text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <h4 class="text-white text-[20px] font-semibold grow"><?php $amount = get_post_meta(get_the_ID(), '_amount', true);
             $currency = get_post_meta(get_the_ID(), '_currency', true);
             echo !empty($amount) ? esc_html($amount) : 'N/A'; ?> <?php echo !empty($currency) ? esc_html($currency) : ''; ?></h4>
-                  
-                  <a href="<?php the_permalink(); ?>" class=" text-center p-3 rounded-md bg-white border border-[var(--primary)] text-[var(--primary)]">Deploy Agent</a>
+
+                            <a href="<?php the_permalink(); ?>" class=" text-center p-3 rounded-md bg-white border border-[var(--primary)] text-[var(--primary)]">Deploy Agent</a>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            </div>
-            <?php
+        <?php
         }
     } else {
         echo '<div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No items found.</div>';
@@ -380,39 +380,39 @@ function filter_ai_tools_by_category()
             $price_from = get_post_meta(get_the_ID(), '_price_from', true);
             ?>
             <div class="swiper-slide tool-slide"
-                 data-link="<?php the_permalink(); ?>"
-                 data-img="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>"
-                 data-title="<?php the_title(); ?>"
-                 data-excerpt="<?php echo wp_trim_words(get_the_excerpt(), 20); ?>"
-                 data-price="<?php echo $price_from ? '$' . $price_from : '$' . $price; ?>"
-                 data-tags="<?php echo implode(',', wp_list_pluck(get_the_terms(get_the_ID(), 'post_tag'), 'name')); ?>">
-                 <a href="<?php the_permalink(); ?>" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
-                <div class="flex flex-col flex-1 w-full gap-3">
-                  <?php if (has_post_thumbnail()): ?>
-                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover rounded-md']); ?>
-                  <?php else: ?>
-                    <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover rounded-md" />
-                  <?php endif; ?>
-                  <h1 class="text-[#1B1D1F] text-[20px] font-semibold"><?php the_title(); ?></h1>
-                  <p class="text-[#5A6478] text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
-                  <div class="ai-tool-features">
-                    <?php
-                    $tags = get_the_terms(get_the_ID(), 'ai-tool-tag');
-                    if ($tags && !is_wp_error($tags)) {
-                        echo '<ul class="feature-list flex gap-2 flex-wrap">';
-                        foreach ($tags as $tag) {
-                            echo '<li class="text-[var(--primary)] bg-[#0F44F31A] p-2 text-[14px] font-normal rounded-full">' . esc_html($tag->name) . '</li>';
-                        }
-                        echo '</ul>';
-                    } else {
-                        echo '<p>No tags available.</p>';
-                    }
-                    ?>  
-                  </div>
-                </div>
-              </a>
+                data-link="<?php the_permalink(); ?>"
+                data-img="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>"
+                data-title="<?php the_title(); ?>"
+                data-excerpt="<?php echo wp_trim_words(get_the_excerpt(), 20); ?>"
+                data-price="<?php echo $price_from ? '$' . $price_from : '$' . $price; ?>"
+                data-tags="<?php echo implode(',', wp_list_pluck(get_the_terms(get_the_ID(), 'post_tag'), 'name')); ?>">
+                <a href="<?php the_permalink(); ?>" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
+                    <div class="flex flex-col flex-1 w-full gap-3">
+                        <?php if (has_post_thumbnail()): ?>
+                            <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover rounded-md']); ?>
+                        <?php else: ?>
+                            <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover rounded-md" />
+                        <?php endif; ?>
+                        <h1 class="text-[#1B1D1F] text-[20px] font-semibold"><?php the_title(); ?></h1>
+                        <p class="text-[#5A6478] text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+                        <div class="ai-tool-features">
+                            <?php
+                            $tags = get_the_terms(get_the_ID(), 'ai-tool-tag');
+                            if ($tags && !is_wp_error($tags)) {
+                                echo '<ul class="feature-list flex gap-2 flex-wrap">';
+                                foreach ($tags as $tag) {
+                                    echo '<li class="text-[var(--primary)] bg-[#0F44F31A] p-2 text-[14px] font-normal rounded-full">' . esc_html($tag->name) . '</li>';
+                                }
+                                echo '</ul>';
+                            } else {
+                                echo '<p>No tags available.</p>';
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </a>
             </div>
-            <?php
+        <?php
         }
     } else {
         echo '<div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No items found.</div>';
@@ -447,11 +447,10 @@ function filter_courses_by_category()
     if ($posts->have_posts()) {
         while ($posts->have_posts()) {
             $posts->the_post();
-            $price = get_post_meta(get_the_ID(), '_price', true);
-            $price_from = get_post_meta(get_the_ID(), '_price_from', true);
+
             ?>
             <div class="swiper-slide tool-slide">
-                <div class="bg-white rounded-sm h-full flex flex-col">
+                <div class="bg-white rounded-xl h-full flex flex-col overflow-hidden border border-[#C9C9C961]">
                     <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
                         <?php if (has_post_thumbnail()): ?>
                             <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
@@ -459,24 +458,12 @@ function filter_courses_by_category()
                             <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
                         <?php endif; ?>
                         <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
-                        <p class="text-[#5A6478] text-center text-[14px] font-normal">
-                            <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
-                        </p>
-                        <?php if ($price || $price_from): ?>
-                            <h1 class="text-[#1B1D1F] text-[14px] text-center mt-2">
-                                <?php _e('Price from', 'wb'); ?>
-                                <span class="text-[20px] font-semibold">
-                                    <?php echo $price_from ? '$' . $price_from : '$' . $price; ?>
-                                </span>
-                            </h1>
-                        <?php endif; ?>
+                        <p class="text-[#5A6478] text-center text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
                     </div>
-                    <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 bg-[var(--primary)] text-white w-full">
-                        <?php _e('View All', 'wb'); ?>
-                    </a>
+                    <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 bg-[var(--primary)] text-white w-full font-bold">Buy Now</a>
                 </div>
             </div>
-            <?php
+        <?php
         }
     } else {
         echo '<div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No items found.</div>';
@@ -515,7 +502,7 @@ function filter_services_by_category()
             $price_from = get_post_meta(get_the_ID(), '_price_from', true);
             ?>
             <div class="swiper-slide tool-slide">
-                <div class="bg-white rounded-sm h-full flex flex-col">
+                <a href="<?php the_permalink(); ?>" class="no-d-hover bg-white rounded-lg h-full flex flex-col overflow-hidden ">
                     <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
                         <?php if (has_post_thumbnail()): ?>
                             <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
@@ -523,24 +510,12 @@ function filter_services_by_category()
                             <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
                         <?php endif; ?>
                         <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
-                        <p class="text-[#5A6478] text-center text-[14px] font-normal">
-                            <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
-                        </p>
-                        <?php if ($price || $price_from): ?>
-                            <h1 class="text-[#1B1D1F] text-[14px] text-center mt-2">
-                                <?php _e('Price from', 'wb'); ?>
-                                <span class="text-[20px] font-semibold">
-                                    <?php echo $price_from ? '$' . $price_from : '$' . $price; ?>
-                                </span>
-                            </h1>
-                        <?php endif; ?>
+                        <p class="text-[#5A6478] text-center text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
                     </div>
-                    <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 bg-[var(--primary)] text-white w-full">
-                        <?php _e('View All', 'wb'); ?>
-                    </a>
-                </div>
+
+                </a>
             </div>
-            <?php
+        <?php
         }
     } else {
         echo '<div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No items found.</div>';
@@ -573,7 +548,7 @@ function filter_content_by_category()
             $posts->the_post();
             ?>
             <div class="swiper-slide tool-slide">
-                <div class="bg-white rounded-sm h-full flex flex-col">
+                <a href="<?php the_permalink(); ?>" class="bg-white rounded-sm h-full flex flex-col border border-[#C9C9C961] overflow-hidden">
                     <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
                         <?php if (has_post_thumbnail()): ?>
                             <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
@@ -585,12 +560,10 @@ function filter_content_by_category()
                             <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
                         </p>
                     </div>
-                    <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 bg-[var(--primary)] text-white w-full">
-                        <?php _e('View Details', 'wb'); ?>
-                    </a>
-                </div>
+                    
+                </a>
             </div>
-            <?php
+    <?php
         }
     } else {
         echo '<div class="swiper-slide col-span-4 text-center text-red-500 font-bold">No items found.</div>';
@@ -787,7 +760,7 @@ function ai_tool_csv_import_page()
         }
         ?>
     </div>
-    <?php
+<?php
 }
 
 // Add CSV Import Menu for AI Agents
@@ -967,5 +940,5 @@ function ai_agent_csv_import_page()
         }
         ?>
     </div>
-    <?php
+<?php
 }
