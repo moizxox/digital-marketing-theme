@@ -74,18 +74,12 @@ $pricing_options = get_terms(array(
 								<?php endforeach; ?>
 							</ul>
 						</div>
-						<div>
-							<h3 class="font-medium mb-2"><?php _e('Price', 'wb'); ?></h3>
-							<input type="number" name="min_price" placeholder="Min Price" value="<?php echo esc_attr($_GET['min_price'] ?? ''); ?>" class="w-full p-2 border rounded mb-2">
-							<input type="number" name="max_price" placeholder="Max Price" value="<?php echo esc_attr($_GET['max_price'] ?? ''); ?>" class="w-full p-2 border rounded">
-						</div>
-						<button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 w-full">Apply Filters</button>
 					</form>
 				</div>
 			</aside>
 
 			<div class="w-full lg:w-3/4">
-				<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+				<div id="results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
 					<?php
 					$query_args = array_merge($wp_query->query_vars, ['posts_per_page' => 16]);
 
@@ -103,27 +97,6 @@ $pricing_options = get_terms(array(
 							'field' => 'slug',
 							'terms' => $_GET['pricing'],
 						);
-					}
-
-					if (!empty($_GET['min_price']) || !empty($_GET['max_price'])) {
-						$meta_query = array('relation' => 'AND');
-						if (!empty($_GET['min_price'])) {
-							$meta_query[] = array(
-								'key' => '_price',
-								'value' => $_GET['min_price'],
-								'compare' => '>=',
-								'type' => 'NUMERIC'
-							);
-						}
-						if (!empty($_GET['max_price'])) {
-							$meta_query[] = array(
-								'key' => '_price',
-								'value' => $_GET['max_price'],
-								'compare' => '<=',
-								'type' => 'NUMERIC'
-							);
-						}
-						$query_args['meta_query'] = $meta_query;
 					}
 
 					query_posts($query_args);
@@ -148,7 +121,8 @@ $pricing_options = get_terms(array(
 								</div>
 							</div>
 						<?php endwhile;
-					else: ?>
+					else:
+						?>
 						<p class="text-center w-full"><?php _e('No tools found.', 'wb'); ?></p>
 					<?php endif; ?>
 				</div>

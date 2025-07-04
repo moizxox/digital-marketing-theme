@@ -955,3 +955,70 @@ function enqueue_alpinejs()
 }
 
 add_action('wp_enqueue_scripts', 'enqueue_alpinejs');
+
+function ajax_filter_ai_tools() {
+    // Check for nonce security
+    check_ajax_referer('filter_nonce', 'nonce');
+
+    $args = array(
+        'post_type' => 'ai-tool',
+        'posts_per_page' => 16,
+    );
+
+    // Filter by features
+    if (!empty($_POST['features'])) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'ai-tool-tag',
+            'field' => 'slug',
+            'terms' => $_POST['features'],
+        );
+    }
+
+    // Filter by pricing options
+    if (!empty($_POST['pricing'])) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'ai-tool-pricing-option',
+            'field' => 'slug',
+            'terms' => $_POST['pricing'],
+        );
+    }
+
+    $query = new WP_Query($args);
+
+    if ($query->have_posts()) :
+        while ($query->have_posts()) : $query->the_post();
+            ?>
+            <div class="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition duration-300">
+                <?php if (has_post_thumbnail()): ?>
+                    <a href="<?php the_permalink(); ?>">
+                        <?php the_post_thumbnail('medium', ['class' => 'w-full h-48 object-cover']); ?>
+                    </a>
+                <?php endif; ?>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold mb-2">
+                        <a href="<?php the_permalink(); ?>" class="hover:text-blue-600">
+                            <?php the_title(); ?>
+                        </a>
+                    </h3>
+                    <p class="text-sm text-gray-600"><?php echo get_the_excerpt(); ?></p>
+                </div>
+            </div>
+            <?php
+        endwhile;
+    else:
+        echo '<p class="text-center w-full">' . __('No tools found.', 'wb') . '</p>';
+    endif;
+
+    wp_die();
+}
+add_action('wp_ajax_filter_ai_tools', 'ajax_filter_ai_tools');
+add_action('wp_ajax_nopriv_filter_ai_tools', 'ajax_filter_ai_tools');
+
+function enqueue_filter_scripts() {
+    wp_enqueue_script('filter-ajax', get_template_directory_uri() . '/js/filter-ajax.js', array('jquery'), null, true);
+    wp_localize_script('filter-ajax', 'filter_vars', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('filter_nonce')
+    ));
+}
+add_action('wp_enqueue_scripts', 'enqueue_filter_scripts');
