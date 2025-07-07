@@ -128,21 +128,31 @@ $pricing_options = get_terms(array(
 						while (have_posts()):
 							the_post();
 							?>
-							<div class="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition duration-300">
-								<?php if (has_post_thumbnail()): ?>
-									<a href="<?php the_permalink(); ?>">
-										<?php the_post_thumbnail('medium', ['class' => 'w-full h-48 object-cover']); ?>
-									</a>
-								<?php endif; ?>
-								<div class="p-4">
-									<h3 class="text-lg font-semibold mb-2">
-										<a href="<?php the_permalink(); ?>" class="hover:text-blue-600">
-											<?php the_title(); ?>
-										</a>
-									</h3>
-									<p class="text-sm text-gray-600"><?php echo get_the_excerpt(); ?></p>
+							<a href="<?php the_permalink(); ?>" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
+								<div class="flex flex-col flex-1 w-full gap-3">
+									<?php if (has_post_thumbnail()): ?>
+										<?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover rounded-md']); ?>
+									<?php else: ?>
+										<img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover rounded-md" />
+									<?php endif; ?>
+									<h1 class="text-[#1B1D1F] text-[20px] font-semibold"><?php the_title(); ?></h1>
+									<p class="text-[#5A6478] text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+									<div class="ai-tool-features">
+										<?php
+										$tags = get_the_terms(get_the_ID(), 'ai-tool-tag');
+										if ($tags && !is_wp_error($tags)) {
+											echo '<ul class="feature-list flex gap-2 flex-wrap">';
+											foreach ($tags as $tag) {
+												echo '<li class="text-[var(--primary)] bg-[#0F44F31A] p-2 text-[14px] font-normal rounded-full">' . esc_html($tag->name) . '</li>';
+											}
+											echo '</ul>';
+										} else {
+											echo '<p>No tags available.</p>';
+										}
+										?>
+									</div>
 								</div>
-							</div>
+							</a>
 						<?php
 						endwhile;
 					else:
