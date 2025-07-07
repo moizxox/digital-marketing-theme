@@ -26,8 +26,8 @@
             </h1>
             <p class="text-[20px] text-center">Discover cutting-edge AI marketing tools and intelligent agent to transform your marketing strategy and drive unprecedented growth</p>
             <div class="flex flex-col sm:flex-row gap-5">
-                <a href="#" class="bg-[var(--secondary)] border border-[var(--secondary)] text-[var(--primary)] py-3 px-4 rounded-md flex items-center gap-2 font-semibold"> <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-tool-btn.svg" alt="">Explore AI Tools</a>
-                <a href="#" class="bg-[#FFFFFF1A] border border-white text-white backdrop-blur-sm py-3 px-4 rounded-md flex items-center gap-2 font-semibold"> <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-agent-btn.svg" alt="">Explore AI Tools</a>
+                <a href="/ai-tools/" class="bg-[var(--secondary)] border border-[var(--secondary)] text-[var(--primary)] py-3 px-4 rounded-md flex items-center gap-2 font-semibold"> <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-tool-btn.svg" alt="">Explore AI Tools</a>
+                <a href="/ai-agents/" class="bg-[#FFFFFF1A] border border-white text-white backdrop-blur-sm py-3 px-4 rounded-md flex items-center gap-2 font-semibold"> <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-agent-btn.svg" alt="">Explore AI Tools</a>
 
             </div>
         </div>
@@ -96,12 +96,12 @@
     <div class="flex flex-wrap justify-center gap-3">
         <?php
         $categories = [
-            ['label' => 'Digital Marketing Tools', 'url' => '#digital-marketing'],
-            ['label' => 'AI Tools', 'url' => '#ai-tools'],
-            ['label' => 'AI Agents', 'url' => '#ai-agents'],
-            ['label' => 'Web Design', 'url' => '#web-design'],
-            ['label' => 'Web Dev', 'url' => '#web-dev'],
-            ['label' => 'SEO Services', 'url' => '#seo-services'],
+            ['label' => 'Digital Marketing Tools', 'url' => '/tool-category/digital-marketing-tools/'],
+            ['label' => 'AI Tools', 'url' => '/ai-tools/'],
+            ['label' => 'AI Agents', 'url' => '/ai-agents/'],
+            ['label' => 'Web Design', 'url' => '/service-category/web-design/'],
+            ['label' => 'Web Dev', 'url' => '/service-category/web-development/'],
+            ['label' => 'SEO Services', 'url' => '/service-category/seo-services/'],
         ];
         foreach ($categories as $cat):
             ?>

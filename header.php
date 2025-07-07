@@ -129,7 +129,7 @@
     <?php if (function_exists('gtm4wp_the_gtm_tag')) gtm4wp_the_gtm_tag(); ?>
     <div class="main-wrap">
         <header class="flex h-[86px] items-center justify-between px-[10%] bg-[var(--primary)] py-4 relative z-50">
-            <a href="<?php echo esc_url(home_url('/')); ?>">
+            <a class='no-d-hover' href="<?php echo esc_url(home_url('/')); ?>">
                 <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/logo.png" alt="Logo" class="h-10" />
             </a>
             

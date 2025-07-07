@@ -6,24 +6,28 @@ $services = [
     'title' => 'Digital Marketing Tools',
     'desc' => 'Discover Essential Digital Marketing Tools to Help You Achieve Your Goals',
     'delay' => 100,
+    'url' => '/tool-category/digital-marketing-tools/',
   ],
   [
     'img' => 'https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Group.png',
     'title' => 'Digital Marketing Courses',
     'desc' => 'Explore a Wide Range of Digital Marketing Courses and Learn From The Experts',
     'delay' => 200,
+    'url' => '/course-category/digital-marketing-courses/',
   ],
   [
     'img' => 'https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Layer_1-1.png',
     'title' => 'Digital Marketing Services',
     'desc' => 'Find and Compare The Best Digital Marketing Service Providers to Help Your Business Grow',
     'delay' => 300,
+    'url' => '/service-category/digital-marketing-services/',
   ],
   [
     'img' => 'https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/layer1.png',
     'title' => 'Content',
     'desc' => 'Find and Compare The Best Digital Marketing Service Providers to help Your Business Grow',
     'delay' => 400,
+    'url' => '/content/',
   ],
 ];
 
@@ -41,7 +45,7 @@ $services = [
         </p>
       </div>
 
-      <a href="#" class="py-3 px-3 rounded-sm flex items-center gap-2 w-fit bg-[#0F44F31A] text-[var(--primary)]">
+      <a href="<?php echo $service['url']; ?>" class="py-3 px-3 rounded-sm flex items-center gap-2 w-fit bg-[#0F44F31A] text-[var(--primary)]">
         Explore
         <i class="fa-solid fa-chevron-right"></i>
       </a>
