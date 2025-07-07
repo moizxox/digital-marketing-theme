@@ -36,16 +36,56 @@ if (($popular_terms = wp_cache_get('_popular_terms')) === false) {
  
 <?php
 
-get_template_part('page-templates/templates/home/hero');
-get_template_part('page-templates/templates/home/ai-tools-slider');
-get_template_part('page-templates/templates/home/ai-agents-slider');
-get_template_part('page-templates/templates/home/services-section');
-get_template_part('page-templates/templates/home/tools-slider');
-get_template_part('page-templates/templates/home/courses-slider');
-get_template_part('page-templates/templates/home/services-slider');
-get_template_part('page-templates/templates/home/content-slider');
-get_template_part('page-templates/templates/home/how-it-works');
-get_template_part('page-templates/templates/home/newsletter');
+// Hero Section
+?>
+<section data-aos="fade-up" data-aos-delay="100">
+    <?php get_template_part('page-templates/templates/home/hero'); ?>
+</section>
+
+<!-- AI Tools Slider -->
+<section data-aos="fade-up" data-aos-delay="150">
+    <?php get_template_part('page-templates/templates/home/ai-tools-slider'); ?>
+</section>
+
+<!-- AI Agents Slider -->
+<section data-aos="fade-up" data-aos-delay="200">
+    <?php get_template_part('page-templates/templates/home/ai-agents-slider'); ?>
+</section>
+
+<!-- Services Section -->
+<section data-aos="fade-up" data-aos-delay="250">
+    <?php get_template_part('page-templates/templates/home/services-section'); ?>
+</section>
+
+<!-- Tools Slider -->
+<section data-aos="fade-up" data-aos-delay="300">
+    <?php get_template_part('page-templates/templates/home/tools-slider'); ?>
+</section>
+
+<!-- Courses Slider -->
+<section data-aos="fade-up" data-aos-delay="350">
+    <?php get_template_part('page-templates/templates/home/courses-slider'); ?>
+</section>
+
+<!-- Services Slider -->
+<section data-aos="fade-up" data-aos-delay="400">
+    <?php get_template_part('page-templates/templates/home/services-slider'); ?>
+</section>
+
+<!-- Content Slider -->
+<section data-aos="fade-up" data-aos-delay="450">
+    <?php get_template_part('page-templates/templates/home/content-slider'); ?>
+</section>
+
+<!-- How It Works -->
+<section data-aos="fade-up" data-aos-delay="500">
+    <?php get_template_part('page-templates/templates/home/how-it-works'); ?>
+</section>
+
+<!-- Newsletter -->
+<section data-aos="fade-up" data-aos-delay="550">
+    <?php get_template_part('page-templates/templates/home/newsletter'); ?>
+</section>
 
 ?>
 
