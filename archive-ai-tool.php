@@ -102,31 +102,58 @@ $pricing_options = get_terms(array(
 			</aside>
 
 			<div class="w-full lg:w-3/4">
-				<div id="results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6">
+				<div id="results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 					<?php
-					$query_args = array_merge($wp_query->query_vars, ['posts_per_page' => 12]);
+					// Get current page
+					$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
+					// Setup the query args
+					$query_args = array(
+						'post_type' => 'ai-tool',
+						'posts_per_page' => 12,
+						'paged' => $paged,
+					);
+
+					// Handle category filter
+					if (!empty($_GET['category'])) {
+						$query_args['tax_query'][] = array(
+							'taxonomy' => 'ai-tool-category',
+							'field' => 'slug',
+							'terms' => sanitize_text_field($_GET['category']),
+						);
+					}
+
+					// Handle features filter
 					if (!empty($_GET['features'])) {
+						$features = is_array($_GET['features']) ? $_GET['features'] : array($_GET['features']);
 						$query_args['tax_query'][] = array(
 							'taxonomy' => 'ai-tool-tag',
 							'field' => 'slug',
-							'terms' => $_GET['features'],
+							'terms' => array_map('sanitize_text_field', $features),
 						);
 					}
 
+					// Handle pricing filter
 					if (!empty($_GET['pricing'])) {
+						$pricing = is_array($_GET['pricing']) ? $_GET['pricing'] : array($_GET['pricing']);
 						$query_args['tax_query'][] = array(
 							'taxonomy' => 'ai-tool-pricing-option',
 							'field' => 'slug',
-							'terms' => $_GET['pricing'],
+							'terms' => array_map('sanitize_text_field', $pricing),
 						);
 					}
 
-					query_posts($query_args);
+					// Set relation for tax queries if we have multiple
+					if (isset($query_args['tax_query']) && count($query_args['tax_query']) > 1) {
+						$query_args['tax_query']['relation'] = 'AND';
+					}
 
-					if (have_posts()):
-						while (have_posts()):
-							the_post();
+					// Create a new query
+					$custom_query = new WP_Query($query_args);
+
+					if ($custom_query->have_posts()):
+						while ($custom_query->have_posts()):
+							$custom_query->the_post();
 							?>
 							<a href="<?php the_permalink(); ?>" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
 								<div class="flex flex-col flex-1 w-full gap-3">
@@ -155,35 +182,30 @@ $pricing_options = get_terms(array(
 							</a>
 						<?php
 						endwhile;
+
+						// Pagination
+						$pagination = paginate_links(array(
+							'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
+							'format' => '?paged=%#%',
+							'current' => max(1, $paged),
+							'total' => $custom_query->max_num_pages,
+							'prev_text' => '&laquo;',
+							'next_text' => '&raquo;',
+							'type' => 'array',
+						));
+
+						if ($pagination):
+							echo '<div class="mt-8 w-full"><ul class="flex flex-wrap justify-center gap-2">';
+							foreach ($pagination as $page_link) {
+								echo '<li>' . str_replace('page-numbers', 'px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700', $page_link) . '</li>';
+							}
+							echo '</ul></div>';
+						endif;
+
+						wp_reset_postdata();
 					else:
 						?>
-						<p class="text-center w-full"><?php _e('No tools found.', 'wb'); ?></p>
-					<?php endif; ?>
-				</div>
-
-				<!-- Pagination -->
-				<div class="mt-8 flex justify-center">
-					<?php
-					$pagination_args = array(
-						'total' => $wp_query->max_num_pages,
-						'current' => max(1, get_query_var('paged')),
-						'show_all' => false,
-						'end_size' => 1,
-						'mid_size' => 2,
-						'prev_next' => true,
-						'prev_text' => __('Previous'),
-						'next_text' => __('Next'),
-						'type' => 'array',
-						'add_args' => false,
-					);
-					$pagination = paginate_links($pagination_args);
-					if ($pagination):
-						?>
-						<ul class="flex flex-wrap justify-center gap-2 mt-4">
-							<?php foreach ($pagination as $link): ?>
-								<li><?php echo str_replace('page-numbers', 'px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700', $link); ?></li>
-							<?php endforeach; ?>
-						</ul>
+						<p class="text-center w-full col-span-3"><?php _e('No tools found.', 'wb'); ?></p>
 					<?php endif; ?>
 				</div>
 			</div>
