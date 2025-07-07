@@ -5,18 +5,15 @@
   }
 </style>
 <section class="ai-agent-slider-main bg-white px-3 sm:px-5 py-[80px] relative"  data-aos-delay="100">
-  <div class="ai-agents-loading-overlay fixed inset-0 flex items-center justify-center bg-white/70 z-50 hidden">
-    <div class="banter-loader"><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div><div class="banter-loader__box"></div></div>
-  </div>
   <section class="max-w-[1440px] mx-auto">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
       <div class="flex items-center gap-2">
         <?php $ai_agents_count = wp_count_posts('ai-agent')->publish; ?>
         <span class="bg-[#FFCC00] text-[var(--primary)] py-1 px-2 rounded-sm text-[20px]"> <?php echo $ai_agents_count; ?> </span>
-        <h1 class="text-[22px] sm:text-[40px]">AI <span class="text-[var(--primary)]">Agents</span></h1>
+        <h1 class="text-[22px] sm:text-[40px] font-semibold">AI <span class="text-[var(--primary)]">Agents</span></h1>
       </div>
       <div class="flex justify-end">
-        <a href="/ai-agents" class="bg-[var(--primary)] w-fit h-fit text-white py-2 px-3 sm:px-5 rounded-sm">View All</a>
+        <a href="/ai-agents" class="bg-[var(--primary)] w-fit h-fit text-white py-2 px-3 sm:px-5 rounded-md">View All</a>
       </div>
     </div>
     <?php $ai_agent_categories = get_terms(['taxonomy' => 'ai-agent-category', 'hide_empty' => true, 'number' => 6]); ?>
