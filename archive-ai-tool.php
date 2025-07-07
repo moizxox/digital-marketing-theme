@@ -25,15 +25,6 @@ $pricing_options = get_terms(array(
 <section class="py-16 text-white" style="background-color: var(--primary);">
 	<div class="container mx-auto px-4 text-center max-w-[1280px]">
 		<h1 class="text-4xl font-bold mb-6 text-white"><?php _e('AI Tools', 'wb'); ?></h1>
-		<?php if ($search_page = wb_get_page_by_template('search')): ?>
-			<form action="<?php echo get_permalink($search_page); ?>" method="get" class="flex flex-col sm:flex-row justify-center gap-4">
-				<input type="text" name="query" class="px-4 py-2 rounded-md text-black w-full sm:w-2/3" placeholder="<?php _e('e.g. ChatGPT or Midjourney', 'wb'); ?>">
-				<input type="hidden" name="type" value="<?php echo $type; ?>">
-				<button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md">
-					<i class="icon icon-search"></i> <?php _e('SEARCH', 'wb'); ?>
-				</button>
-			</form>
-		<?php endif; ?>
 	</div>
 </section>
 
