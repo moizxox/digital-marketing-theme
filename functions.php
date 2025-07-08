@@ -1085,3 +1085,46 @@ function enqueue_filter_scripts()
 }
 
 add_action('wp_enqueue_scripts', 'enqueue_filter_scripts');
+
+class Custom_Nav_Walker extends Walker_Nav_Menu
+{
+    function start_lvl(&$output, $depth = 0, $args = null)
+    {
+        $indent = str_repeat("\t", $depth);
+        $output .= "\n$indent<ul class=\"submenu pl-4 mt-2\">\n";
+    }
+
+    function start_el(&$output, $item, $depth = 0, $args = null, $id = 0)
+    {
+        $classes = empty($item->classes) ? [] : (array) $item->classes;
+        $has_children = in_array('menu-item-has-children', $classes);
+
+        $class_names = join(' ', array_filter($classes));
+        $class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
+
+        $output .= "<li$class_names>";
+
+        $attributes = !empty($item->attr_title) ? ' title="' . esc_attr($item->attr_title) . '"' : '';
+        $attributes .= !empty($item->url) ? ' href="' . esc_url($item->url) . '"' : '';
+        $attributes .= ' class="block py-2 px-3 hover:bg-[var(--secondary)] rounded"';
+
+        $output .= '<a' . $attributes . '>';
+        $output .= apply_filters('the_title', $item->title, $item->ID);
+        $output .= '</a>';
+
+        // if ($has_children && $depth === 0) {
+        //     $output .= '<span class="ml-2">▼</span>';
+        // }
+    }
+
+    function end_el(&$output, $item, $depth = 0, $args = null)
+    {
+        $output .= "</li>\n";
+    }
+
+    function end_lvl(&$output, $depth = 0, $args = null)
+    {
+        $indent = str_repeat("\t", $depth);
+        $output .= "$indent</ul>\n";
+    }
+}

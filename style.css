@@ -16947,7 +16947,7 @@ a {
 }
 
 .main-wrap {
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .header {
