@@ -193,7 +193,7 @@ function enqueue_custom_cdn_assets()
         [],
         null
     );
-    
+
     wp_enqueue_script(
         'aos-js',
         'https://unpkg.com/aos@2.3.1/dist/aos.js',
@@ -994,7 +994,8 @@ function enqueue_alpinejs()
 
 add_action('wp_enqueue_scripts', 'enqueue_alpinejs');
 
-function ajax_filter_ai_tools() {
+function ajax_filter_ai_tools()
+{
     // Check for nonce security
     check_ajax_referer('filter_nonce', 'nonce');
 
@@ -1032,8 +1033,9 @@ function ajax_filter_ai_tools() {
 
     $query = new WP_Query($args);
 
-    if ($query->have_posts()) :
-        while ($query->have_posts()) : $query->the_post();
+    if ($query->have_posts()):
+        while ($query->have_posts()):
+            $query->the_post();
             ?>
             <a href="<?php the_permalink(); ?>" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
                 <div class="flex flex-col flex-1 w-full gap-3">
@@ -1069,14 +1071,17 @@ function ajax_filter_ai_tools() {
     wp_reset_postdata();
     wp_die();
 }
+
 add_action('wp_ajax_filter_ai_tools', 'ajax_filter_ai_tools');
 add_action('wp_ajax_nopriv_filter_ai_tools', 'ajax_filter_ai_tools');
 
-function enqueue_filter_scripts() {
+function enqueue_filter_scripts()
+{
     wp_enqueue_script('filter-ajax', get_template_directory_uri() . '/js/filter-ajax.js', array('jquery'), null, true);
     wp_localize_script('filter-ajax', 'filter_vars', array(
         'ajax_url' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('filter_nonce')
     ));
 }
+
 add_action('wp_enqueue_scripts', 'enqueue_filter_scripts');
