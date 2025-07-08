@@ -12,7 +12,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: #0F44F34D;
+            background:rgba(3, 61, 95, 0.55);
             z-index: 0;
         }
 
