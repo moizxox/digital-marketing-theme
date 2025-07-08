@@ -19876,6 +19876,9 @@ a {
 .product-box-detail__image {
   margin-bottom: 12px;
   text-align: center;
+  img{
+  width:100%;
+  }
 }
 
 .product-box-detail__logo {

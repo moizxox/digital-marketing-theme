@@ -1086,6 +1086,145 @@ function enqueue_filter_scripts()
 
 add_action('wp_enqueue_scripts', 'enqueue_filter_scripts');
 
+// Enqueue AI Agents filter script
+function enqueue_ai_agents_filter_scripts() {
+    if (is_post_type_archive('ai-agent') || is_tax('ai-agent-category')) {
+        wp_enqueue_script(
+            'ai-agents-filter',
+            get_template_directory_uri() . '/js/ai-agents-filter.js',
+            array('jquery'),
+            '1.0.0',
+            true
+        );
+
+        // Localize script with ajax url and nonce
+        wp_localize_script('ai-agents-filter', 'ajax_object', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('ai_agents_filter_nonce')
+        ));
+    }
+}
+add_action('wp_enqueue_scripts', 'enqueue_ai_agents_filter_scripts');
+
+// AJAX handler for filtering AI Agents
+add_action('wp_ajax_filter_ai_agents', 'filter_ai_agents_callback');
+add_action('wp_ajax_nopriv_filter_ai_agents', 'filter_ai_agents_callback');
+
+function filter_ai_agents_callback() {
+    // Verify nonce
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ai_agents_filter_nonce')) {
+        wp_send_json_error('Invalid nonce');
+    }
+
+    // Get and sanitize input
+    $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '';
+    
+    // Handle features - could be array or JSON string
+    $features = array();
+    if (isset($_POST['features'])) {
+        if (is_array($_POST['features'])) {
+            $features = array_map('sanitize_text_field', $_POST['features']);
+        } elseif (is_string($_POST['features'])) {
+            $decoded = json_decode(stripslashes($_POST['features']), true);
+            $features = is_array($decoded) ? array_map('sanitize_text_field', $decoded) : array();
+        }
+    }
+    
+    // Handle pricing - could be array or JSON string
+    $pricing = array();
+    if (isset($_POST['pricing'])) {
+        if (is_array($_POST['pricing'])) {
+            $pricing = array_map('sanitize_text_field', $_POST['pricing']);
+        } elseif (is_string($_POST['pricing'])) {
+            $decoded = json_decode(stripslashes($_POST['pricing']), true);
+            $pricing = is_array($decoded) ? array_map('sanitize_text_field', $decoded) : array();
+        }
+    }
+
+    // Setup query args
+    $args = array(
+        'post_type' => 'ai-agent',
+        'posts_per_page' => 12,
+        'paged' => 1, // Always show first page on filter
+    );
+
+    // Add category filter
+    if (!empty($category)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'ai-agent-category',
+            'field'    => 'slug',
+            'terms'    => $category,
+        );
+    }
+
+    // Add features filter
+    if (!empty($features)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'ai-agent-tag',
+            'field'    => 'slug',
+            'terms'    => $features,
+            'operator' => 'AND',
+        );
+    }
+
+    // Add pricing filter
+    if (!empty($pricing)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'ai-agent-pricing-option',
+            'field'    => 'slug',
+            'terms'    => $pricing,
+        );
+    }
+
+    // Set relation for multiple tax queries
+    if (isset($args['tax_query']) && count($args['tax_query']) > 1) {
+        $args['tax_query']['relation'] = 'AND';
+    }
+
+    $query = new WP_Query($args);
+    ob_start();
+
+    if ($query->have_posts()) :
+        while ($query->have_posts()) : $query->the_post();
+            ?>
+            <a href="<?php the_permalink(); ?>" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
+                <div class="flex flex-col flex-1 w-full gap-3">
+                    <?php if (has_post_thumbnail()) : ?>
+                        <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover rounded-md']); ?>
+                    <?php else : ?>
+                        <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover rounded-md" />
+                    <?php endif; ?>
+                    <h1 class="text-[#1B1D1F] text-[20px] font-semibold"><?php the_title(); ?></h1>
+                    <p class="text-[#5A6478] text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+                    <div class="ai-agent-features">
+                        <?php
+                        $tags = get_the_terms(get_the_ID(), 'ai-agent-tag');
+                        if ($tags && !is_wp_error($tags)) {
+                            echo '<ul class="feature-list flex gap-2 flex-wrap">';
+                            foreach ($tags as $tag) {
+                                echo '<li class="text-[var(--primary)] bg-[#0F44F31A] p-2 text-[14px] font-normal rounded-full">' . esc_html($tag->name) . '</li>';
+                            }
+                            echo '</ul>';
+                        } else {
+                            echo '<p>No tags available.</p>';
+                        }
+                        ?>
+                    </div>
+                </div>
+            </a>
+            <?php
+        endwhile;
+        wp_reset_postdata();
+    else :
+        ?>
+        <p class="text-center w-full col-span-3"><?php _e('No agents found.', 'wb'); ?></p>
+        <?php
+    endif;
+
+    $html = ob_get_clean();
+    wp_send_json_success(array('html' => $html));
+}
+
 class Custom_Nav_Walker extends Walker_Nav_Menu
 {
     function start_lvl(&$output, $depth = 0, $args = null)
