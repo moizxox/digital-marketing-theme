@@ -1,39 +1,48 @@
 jQuery(document).ready(function($) {
+    // Only run this code on AI Agents archive page
+    if (!$('body').hasClass('post-type-archive-ai-agent')) return;
+
+    // Cache selectors specific to AI Agents section
+    const $aiAgentsFilter = $('#ai-agents-filter');
+    const $aiAgentsResults = $('#ai-agents-results');
+    const $aiAgentsCategoryButtons = $('.ai-agents-category-button');
+    const $aiAgentsCheckboxes = $aiAgentsFilter.find('input[type="checkbox"]');
+
     // Handle filter form submission
-    $('#ai-agents-filter').on('submit', function(e) {
+    $aiAgentsFilter.on('submit', function(e) {
         e.preventDefault();
         filterAIAgents();
     });
 
     // Handle category button clicks
-    $('.category-button').on('click', function() {
-        $('.category-button').removeClass('active-btn');
+    $aiAgentsCategoryButtons.on('click', function() {
+        $aiAgentsCategoryButtons.removeClass('active-btn');
         $(this).addClass('active-btn');
         filterAIAgents();
     });
 
     // Handle checkbox changes
-    $('input[type="checkbox"]').on('change', function() {
+    $aiAgentsCheckboxes.on('change', function() {
         filterAIAgents();
     });
 
     function filterAIAgents() {
-        // Show loading state
-        $('#results').addClass('opacity-50');
-        $('#results').html('<div class="col-span-3 text-center py-12"><div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div></div>');
+        // Show loading state only for AI Agents section
+        $aiAgentsResults.addClass('opacity-50');
+        $aiAgentsResults.html('<div class="col-span-3 text-center py-12"><div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div></div>');
 
         // Get selected category
-        const selectedCategory = $('.category-button.active-btn').data('category') || '';
+        const selectedCategory = $aiAgentsCategoryButtons.filter('.active-btn').data('category') || '';
 
         // Get selected features
         const selectedFeatures = [];
-        $('input[name="features[]"]:checked').each(function() {
+        $aiAgentsFilter.find('input[name="features[]"]:checked').each(function() {
             selectedFeatures.push($(this).val());
         });
 
         // Get selected pricing options
         const selectedPricing = [];
-        $('input[name="pricing[]"]:checked').each(function() {
+        $aiAgentsFilter.find('input[name="pricing[]"]:checked').each(function() {
             selectedPricing.push($(this).val());
         });
 
@@ -67,9 +76,9 @@ jQuery(document).ready(function($) {
             contentType: false,
             success: function(response) {
                 if (response.success) {
-                    $('#results').html(response.data.html);
+                    $aiAgentsResults.html(response.data.html);
                 } else {
-                    $('#results').html('<p class="text-center w-full col-span-3">' + response.data.message + '</p>');
+                    $aiAgentsResults.html('<p class="text-center w-full col-span-3">' + response.data.message + '</p>');
                 }
             },
             error: function(xhr, status, error) {
@@ -77,7 +86,7 @@ jQuery(document).ready(function($) {
                 $('#results').html('<p class="text-center w-full col-span-3">An error occurred. Please try again.</p>');
             },
             complete: function() {
-                $('#results').removeClass('opacity-50');
+                $aiAgentsResults.removeClass('opacity-50');
             }
         });
     }

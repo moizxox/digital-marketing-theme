@@ -30,7 +30,7 @@ $pricing_options = get_terms(array(
 </section>
 
 <div class="py-8 text-center flex overflow-x-auto justify-start max-w-[1280px] mx-auto custom-scroll px-4">
-    <button class="category-button capitalize text-black whitespace-nowrap px-4 py-2 rounded-lg m-1 border-[3px] text-white active-btn" data-category="">
+    <button class="ai-agents-category-button capitalize text-black whitespace-nowrap px-4 py-2 rounded-lg m-1 border-[3px] text-white active-btn" data-category="">
         <?php _e('All', 'wb'); ?>
     </button>
     <?php
@@ -39,7 +39,7 @@ $pricing_options = get_terms(array(
     foreach ($categories as $category):
         $is_active = $current_cat === $category->slug ? 'active-btn text-white' : '';
         ?>
-        <button class="category-button capitalize text-black whitespace-nowrap bg-transparent px-4 py-2 rounded-lg m-1 border-[3px] <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
+        <button class="ai-agents-category-button capitalize text-black whitespace-nowrap bg-transparent px-4 py-2 rounded-lg m-1 border-[3px] <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
             <?php echo $category->name; ?>
         </button>
     <?php endforeach; ?>
@@ -102,7 +102,7 @@ $pricing_options = get_terms(array(
             </aside>
 
             <div class="w-full lg:w-3/4">
-                <div id="results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div id="ai-agents-results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     <?php
                     // Get current page
                     $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
@@ -219,6 +219,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const sidebar = document.getElementById("filterSidebar");
     const filterForm = document.getElementById('ai-agents-filter');
     const loadingIndicator = document.getElementById('loading-indicator');
+    
+    // Add body class for AI Agents archive
+    document.body.classList.add('post-type-archive-ai-agent');
 
     // Toggle mobile filters
     if (toggleBtn) {
