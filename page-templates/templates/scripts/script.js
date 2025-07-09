@@ -28,11 +28,17 @@ jQuery(document).ready(function ($) {
         .querySelectorAll("#tool-categories button")
         .forEach((b) => b.classList.remove("active", "bg-[#FFCC00]", "text-[#0C2452]"));
       this.classList.add("active", "bg-[#FFCC00]", "text-[#0C2452]");
+      showToolsLoading();
       fetch(`${ajaxurl}?action=filter_tools_by_category&category_id=${categoryId}`)
         .then((res) => res.text())
         .then((html) => {
           document.querySelector(".tools-swiper .swiper-wrapper").innerHTML = html;
           initToolsSwiper();
+        })
+        .catch((error) => {
+          console.error('Error loading tools:', error);
+        })
+        .finally(() => {
           hideToolsLoading();
         });
     });
@@ -66,25 +72,17 @@ jQuery(document).ready(function ($) {
         .querySelectorAll("#ai-agent-categories button")
         .forEach((b) => b.classList.remove("active", "bg-[#FFCC00]", "text-[#0C2452]"));
       this.classList.add("active", "bg-[#FFCC00]", "text-[#0C2452]");
+      showAiAgentsLoading();
       fetch(`${ajaxurl}?action=filter_ai_agents_by_category&category_id=${categoryId}`)
         .then((res) => res.text())
         .then((html) => {
           document.querySelector(".ai-agents-swiper .swiper-wrapper").innerHTML = html;
           initAiAgentsSwiper();
-          // document.querySelectorAll('.ai-agents-swiper .swiper-slide').forEach((slide) => {
-          //   slide.innerHTML = `<div class="my-gradient-background p-4 rounded-3xl h-full">
-          //                         <div class="rounded-sm  flex flex-col gap-2">
-          //                           <img src="${slide.dataset.img}" alt="${slide.dataset.title}" class="w-full h-[240px] rounded-md object-cover" />
-          //                           <h1 class="text-white text-[20px] font-semibold">${slide.dataset.title}</h1>
-          //                           <span class="text-white text-[14px] font-normal">24/7</span>
-          //                           <p class="text-white text-[14px] font-normal">${slide.dataset.excerpt}</p>
-          //                         </div>
-          //                         <div class="flex items-center gap-2">
-          //                           <h4 class="text-white text-[20px] font-semibold grow">${slide.dataset.amount} ${slide.dataset.currency}</h4>
-          //                           <a href="${slide.dataset.link}" class=" text-center p-3 rounded-md bg-white border border-[var(--primary)] text-[var(--primary)]">Deploy Agent</a>
-          //                         </div>
-          //                       </div>`;
-          // });
+        })
+        .catch((error) => {
+          console.error('Error loading AI agents:', error);
+        })
+        .finally(() => {
           hideAiAgentsLoading();
         });
     });
@@ -117,12 +115,17 @@ jQuery(document).ready(function ($) {
         .querySelectorAll("#ai-tool-categories button")
         .forEach((b) => b.classList.remove("active", "bg-[#FFCC00]", "text-[#0C2452]"));
       this.classList.add("active", "bg-[#FFCC00]", "text-[#0C2452]");
+      showAiToolsLoading();
       fetch(`${ajaxurl}?action=filter_ai_tools_by_category&category_id=${categoryId}`)
         .then((res) => res.text())
         .then((html) => {
-          console.log("The HTML is",html);
           document.querySelector(".ai-tools-swiper .swiper-wrapper").innerHTML = html;
           initAiToolsSwiper();
+        })
+        .catch((error) => {
+          console.error('Error loading AI tools:', error);
+        })
+        .finally(() => {
           hideAiToolsLoading();
         });
     });
@@ -156,11 +159,17 @@ jQuery(document).ready(function ($) {
         .querySelectorAll("#course-categories button")
         .forEach((b) => b.classList.remove("active", "bg-[#FFCC00]", "text-[#0C2452]"));
       this.classList.add("active", "bg-[#FFCC00]", "text-[#0C2452]");
+      showCoursesLoading();
       fetch(`${ajaxurl}?action=filter_courses_by_category&category_id=${categoryId}`)
         .then((res) => res.text())
         .then((html) => {
           document.querySelector(".courses-swiper .swiper-wrapper").innerHTML = html;
           initCoursesSwiper();
+        })
+        .catch((error) => {
+          console.error('Error loading courses:', error);
+        })
+        .finally(() => {
           hideCoursesLoading();
         });
     });
@@ -194,11 +203,17 @@ jQuery(document).ready(function ($) {
         .querySelectorAll("#service-categories button")
         .forEach((b) => b.classList.remove("active", "bg-[#FFCC00]", "text-[#0C2452]"));
       this.classList.add("active", "bg-[#FFCC00]", "text-[#0C2452]");
+      showServicesLoading();
       fetch(`${ajaxurl}?action=filter_services_by_category&category_id=${categoryId}`)
         .then((res) => res.text())
         .then((html) => {
           document.querySelector(".services-swiper .swiper-wrapper").innerHTML = html;
           initServicesSwiper();
+        })
+        .catch((error) => {
+          console.error('Error loading services:', error);
+        })
+        .finally(() => {
           hideServicesLoading();
         });
     });
@@ -226,17 +241,27 @@ jQuery(document).ready(function ($) {
   $('#content-categories button[data-category="all"]').addClass("active bg-[#FFCC00] text-[#0C2452]");
   document.querySelectorAll("#content-categories button").forEach((btn) => {
     btn.addEventListener("click", function () {
-      showContentLoading();
       const categoryId = this.getAttribute("data-category");
       document
         .querySelectorAll("#content-categories button")
         .forEach((b) => b.classList.remove("active", "bg-[#FFCC00]", "text-[#0C2452]"));
       this.classList.add("active", "bg-[#FFCC00]", "text-[#0C2452]");
+      
+      showContentLoading();
       fetch(`${ajaxurl}?action=filter_content_by_category&category_id=${categoryId}`)
         .then((res) => res.json())
         .then((data) => {
-          document.querySelector(".content-swiper .swiper-wrapper").innerHTML = data.data;
-          initContentSwiper();
+          if (data.success) {
+            document.querySelector(".content-swiper .swiper-wrapper").innerHTML = data.data;
+            initContentSwiper();
+          } else {
+            console.error('Error loading content:', data.message || 'Unknown error');
+          }
+        })
+        .catch((error) => {
+          console.error('Error loading content:', error);
+        })
+        .finally(() => {
           hideContentLoading();
         });
     });
@@ -253,23 +278,98 @@ jQuery(document).ready(function ($) {
     cursorChar: "",
   });
 
+  // --- LOADER TEMPLATE ---
+  function getLoaderHTML() {
+    return `
+      <div class="absolute inset-0 bg-white/70 flex items-center justify-center z-10 rounded-xl">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--primary)]"></div>
+      </div>
+    `;
+  }
+
   // --- TOOLS ---
-  function showToolsLoading() {}
+  function showToolsLoading() {
+    const swiperWrapper = document.querySelector('.tools-swiper .swiper-wrapper');
+    if (swiperWrapper) {
+      swiperWrapper.style.position = 'relative';
+      swiperWrapper.insertAdjacentHTML('beforeend', getLoaderHTML());
+    }
+  }
+  
+  function hideToolsLoading() {
+    const loader = document.querySelector('.tools-swiper .swiper-wrapper > div[style*="absolute"]');
+    if (loader) loader.remove();
+  }
 
   // --- AI AGENTS ---
-  function showAiAgentsLoading() {}
+  function showAiAgentsLoading() {
+    const swiperWrapper = document.querySelector('.ai-agents-swiper .swiper-wrapper');
+    if (swiperWrapper) {
+      swiperWrapper.style.position = 'relative';
+      swiperWrapper.insertAdjacentHTML('beforeend', getLoaderHTML());
+    }
+  }
+  
+  function hideAiAgentsLoading() {
+    const loader = document.querySelector('.ai-agents-swiper .swiper-wrapper > div[style*="absolute"]');
+    if (loader) loader.remove();
+  }
 
   // --- COURSES ---
-  function showCoursesLoading() {}
+  function showCoursesLoading() {
+    const swiperWrapper = document.querySelector('.courses-swiper .swiper-wrapper');
+    if (swiperWrapper) {
+      swiperWrapper.style.position = 'relative';
+      swiperWrapper.insertAdjacentHTML('beforeend', getLoaderHTML());
+    }
+  }
+  
+  function hideCoursesLoading() {
+    const loader = document.querySelector('.courses-swiper .swiper-wrapper > div[style*="absolute"]');
+    if (loader) loader.remove();
+  }
 
   // --- SERVICES ---
-  function showServicesLoading() {}
+  function showServicesLoading() {
+    const swiperWrapper = document.querySelector('.services-swiper .swiper-wrapper');
+    if (swiperWrapper) {
+      swiperWrapper.style.position = 'relative';
+      swiperWrapper.insertAdjacentHTML('beforeend', getLoaderHTML());
+    }
+  }
+  
+  function hideServicesLoading() {
+    const loader = document.querySelector('.services-swiper .swiper-wrapper > div[style*="absolute"]');
+    if (loader) loader.remove();
+  }
 
   // --- CONTENT ---
-  function showContentLoading() {}
+  function showContentLoading() {
+    const swiperWrapper = document.querySelector('.content-swiper .swiper-wrapper');
+    if (swiperWrapper) {
+      swiperWrapper.style.position = 'relative';
+      swiperWrapper.insertAdjacentHTML('beforeend', getLoaderHTML());
+    }
+  }
+  
+  function hideContentLoading() {
+    const loader = document.querySelector('.content-swiper .swiper-wrapper > div[style*="absolute"]');
+    if (loader) loader.remove();
+  }
 
   // --- AI TOOLS ---
-  function showAiToolsLoading() {}
+  function showAiToolsLoading() {
+    const swiperWrapper = document.querySelector('.ai-tools-swiper .swiper-wrapper');
+    if (swiperWrapper) {
+      swiperWrapper.style.position = 'relative';
+      swiperWrapper.insertAdjacentHTML('beforeend', getLoaderHTML());
+    }
+  }
+  
+  function hideAiToolsLoading() {
+    const loader = document.querySelector('.ai-tools-swiper .swiper-wrapper > div[style*="absolute"]');
+    if (loader) loader.remove();
+  }
 
   // --- LOADING ---
   function handlePageLoad() {
