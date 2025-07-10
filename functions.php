@@ -627,6 +627,27 @@ function add_ai_tool_csv_import_menu()
 add_action('admin_menu', 'add_ai_tool_csv_import_menu');
 
 // CSV Import Page Content
+// Helper function to get attachment ID by filename
+function wb_get_attachment_id_by_filename($filename) {
+    global $wpdb;
+    
+    // Remove query strings from filename
+    $filename = preg_replace('/\?.*$/', '', $filename);
+    
+    // Get just the filename without path
+    $filename = basename($filename);
+    
+    // Search for the attachment in the database
+    $attachment = $wpdb->get_var($wpdb->prepare(
+        "SELECT post_id FROM $wpdb->postmeta 
+        WHERE meta_key = '_wp_attached_file' 
+        AND meta_value LIKE %s",
+        '%' . $wpdb->esc_like($filename)
+    ));
+    
+    return $attachment ? (int)$attachment : 0;
+}
+
 function ai_tool_csv_import_page()
 {
     ?>
@@ -750,27 +771,49 @@ function ai_tool_csv_import_page()
                                 if (!empty($currency)) {
                                     update_post_meta($post_id, '_currency', $currency);
                                 }
-                                // Logo (download and save URL to _logo)
+                                // Handle Logo (check if exists before uploading)
                                 if (!empty($logo_url)) {
-                                    require_once (ABSPATH . 'wp-admin/includes/file.php');
-                                    require_once (ABSPATH . 'wp-admin/includes/media.php');
-                                    require_once (ABSPATH . 'wp-admin/includes/image.php');
-                                    $logo_id = media_sideload_image($logo_url, $post_id, '', 'id');
-                                    if (!is_wp_error($logo_id)) {
-                                        $logo_url_attached = wp_get_attachment_url($logo_id);
+                                    // First check if the image already exists in the media library
+                                    $existing_logo_id = wb_get_attachment_id_by_filename($logo_url);
+                                    
+                                    if ($existing_logo_id) {
+                                        // Use existing attachment
+                                        $logo_url_attached = wp_get_attachment_url($existing_logo_id);
                                         update_post_meta($post_id, '_logo', $logo_url_attached);
                                     } else {
-                                        update_post_meta($post_id, '_logo', $logo_url);  // fallback: store URL
+                                        // Download and upload the image if it doesn't exist
+                                        require_once (ABSPATH . 'wp-admin/includes/file.php');
+                                        require_once (ABSPATH . 'wp-admin/includes/media.php');
+                                        require_once (ABSPATH . 'wp-admin/includes/image.php');
+                                        
+                                        $logo_id = media_sideload_image($logo_url, $post_id, '', 'id');
+                                        if (!is_wp_error($logo_id)) {
+                                            $logo_url_attached = wp_get_attachment_url($logo_id);
+                                            update_post_meta($post_id, '_logo', $logo_url_attached);
+                                        } else {
+                                            update_post_meta($post_id, '_logo', $logo_url);  // fallback: store URL
+                                        }
                                     }
                                 }
-                                // Featured Image
+                                
+                                // Handle Featured Image (check if exists before uploading)
                                 if (!empty($image_url)) {
-                                    require_once (ABSPATH . 'wp-admin/includes/file.php');
-                                    require_once (ABSPATH . 'wp-admin/includes/media.php');
-                                    require_once (ABSPATH . 'wp-admin/includes/image.php');
-                                    $image_id = media_sideload_image($image_url, $post_id, '', 'id');
-                                    if (!is_wp_error($image_id)) {
-                                        set_post_thumbnail($post_id, $image_id);
+                                    // First check if the image already exists in the media library
+                                    $existing_image_id = wb_get_attachment_id_by_filename($image_url);
+                                    
+                                    if ($existing_image_id) {
+                                        // Use existing attachment
+                                        set_post_thumbnail($post_id, $existing_image_id);
+                                    } else {
+                                        // Download and upload the image if it doesn't exist
+                                        require_once (ABSPATH . 'wp-admin/includes/file.php');
+                                        require_once (ABSPATH . 'wp-admin/includes/media.php');
+                                        require_once (ABSPATH . 'wp-admin/includes/image.php');
+                                        
+                                        $image_id = media_sideload_image($image_url, $post_id, '', 'id');
+                                        if (!is_wp_error($image_id)) {
+                                            set_post_thumbnail($post_id, $image_id);
+                                        }
                                     }
                                 }
                                 $imported++;
@@ -933,24 +976,43 @@ function ai_agent_csv_import_page()
                                     update_post_meta($post_id, '_currency', $currency);
                                 }
                                 if (!empty($logo_url)) {
-                                    require_once (ABSPATH . 'wp-admin/includes/file.php');
-                                    require_once (ABSPATH . 'wp-admin/includes/media.php');
-                                    require_once (ABSPATH . 'wp-admin/includes/image.php');
-                                    $logo_id = media_sideload_image($logo_url, $post_id, '', 'id');
-                                    if (!is_wp_error($logo_id)) {
-                                        $logo_url_attached = wp_get_attachment_url($logo_id);
+                                    $existing_logo_id = wb_get_attachment_id_by_filename($logo_url);
+                                    
+                                    if ($existing_logo_id) {
+                                        // Use existing attachment
+                                        $logo_url_attached = wp_get_attachment_url($existing_logo_id);
                                         update_post_meta($post_id, '_logo', $logo_url_attached);
                                     } else {
-                                        update_post_meta($post_id, '_logo', $logo_url);
+                                        // Download and upload the image if it doesn't exist
+                                        require_once (ABSPATH . 'wp-admin/includes/file.php');
+                                        require_once (ABSPATH . 'wp-admin/includes/media.php');
+                                        require_once (ABSPATH . 'wp-admin/includes/image.php');
+                                        
+                                        $logo_id = media_sideload_image($logo_url, $post_id, '', 'id');
+                                        if (!is_wp_error($logo_id)) {
+                                            $logo_url_attached = wp_get_attachment_url($logo_id);
+                                            update_post_meta($post_id, '_logo', $logo_url_attached);
+                                        } else {
+                                            update_post_meta($post_id, '_logo', $logo_url);
+                                        }
                                     }
                                 }
                                 if (!empty($image_url)) {
-                                    require_once (ABSPATH . 'wp-admin/includes/file.php');
-                                    require_once (ABSPATH . 'wp-admin/includes/media.php');
-                                    require_once (ABSPATH . 'wp-admin/includes/image.php');
-                                    $image_id = media_sideload_image($image_url, $post_id, '', 'id');
-                                    if (!is_wp_error($image_id)) {
-                                        set_post_thumbnail($post_id, $image_id);
+                                    $existing_image_id = wb_get_attachment_id_by_filename($image_url);
+                                    
+                                    if ($existing_image_id) {
+                                        // Use existing attachment
+                                        set_post_thumbnail($post_id, $existing_image_id);
+                                    } else {
+                                        // Download and upload the image if it doesn't exist
+                                        require_once (ABSPATH . 'wp-admin/includes/file.php');
+                                        require_once (ABSPATH . 'wp-admin/includes/media.php');
+                                        require_once (ABSPATH . 'wp-admin/includes/image.php');
+                                        
+                                        $image_id = media_sideload_image($image_url, $post_id, '', 'id');
+                                        if (!is_wp_error($image_id)) {
+                                            set_post_thumbnail($post_id, $image_id);
+                                        }
                                     }
                                 }
                                 $imported++;
