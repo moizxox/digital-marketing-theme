@@ -12,6 +12,16 @@
     <?php wp_enqueue_script('cookie', WB_THEME_URL . '/js/cookie.js', array('jquery')); ?>
     <?php wp_enqueue_script('jquery.formstyler', WB_THEME_URL . '/js/jquery.formstyler.js', array('cookie')); ?>
     <?php wp_enqueue_script('main', WB_THEME_URL . '/js/main.js', array('jquery.formstyler')); ?>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2XQSGX52CE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2XQSGX52CE');
+</script>
+		
     <?php wp_head(); ?>
     <style>
         body a:hover {

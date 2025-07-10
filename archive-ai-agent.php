@@ -26,6 +26,7 @@ $pricing_options = get_terms(array(
 <section class="py-16 text-white" style="background-color: var(--primary);">
     <div class="container mx-auto px-4 text-center max-w-[1280px]">
         <h1 class="text-4xl font-bold mb-6 text-white"><?php _e('AI Agents', 'wb'); ?></h1>
+        <p class="text-center text-[14px]">Explore the ultimate directory of AI Marketing Agents designed to automate campaigns, boost ROI, and streamline your workflow. From SEO to content creation, discover powerful AI tools, compare features, and find the perfect agent to supercharge your digital marketing.</p>
     </div>
 </section>
 

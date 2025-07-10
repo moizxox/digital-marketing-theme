@@ -25,6 +25,7 @@ $pricing_options = get_terms(array(
 <section class="py-16 text-white" style="background-color: var(--primary);">
 	<div class="container mx-auto px-4 text-center max-w-[1280px]">
 		<h1 class="text-4xl font-bold mb-6 text-white"><?php _e('AI Tools', 'wb'); ?></h1>
+		<p class="text-center text-[14px]">Discover the best AI marketing tools for SEO, content marketing, email, social media, and more. Use AI to automate repetitive tasks, improve performance, and scale your efforts with cutting-edge technology. Compare tools, and find the right fit for your goals.</p>
 	</div>
 </section>
 
