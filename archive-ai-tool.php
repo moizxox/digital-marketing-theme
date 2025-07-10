@@ -28,7 +28,10 @@ $pricing_options = get_terms(array(
 	</div>
 </section>
 
-<div class="py-8 text-center flex overflow-x-auto justify-start max-w-[1280px] mx-auto custom-scroll px-4">
+<section class="py-8">
+<h5 class="text-center text-[var(--primary)] text-[20px] font-semibold">Categories</h5>
+
+<div class=" text-center flex overflow-x-auto justify-start max-w-[1280px] mx-auto custom-scroll px-4">
 	<button class="category-button capitalize text-black whitespace-nowrap  px-4 py-2 rounded-lg m-1 border-[3px] text-white active-btn" data-category="">
 		<?php _e('All', 'wb'); ?>
 	</button>
@@ -43,6 +46,9 @@ $pricing_options = get_terms(array(
 		</button>
 	<?php endforeach; ?>
 </div>
+</section>
+
+
 
 <main class="py-12">
 	<div class="container mx-auto px-4">

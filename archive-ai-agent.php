@@ -29,7 +29,10 @@ $pricing_options = get_terms(array(
     </div>
 </section>
 
-<div class="py-8 text-center flex overflow-x-auto justify-start max-w-[1280px] mx-auto custom-scroll px-4">
+<section class="py-8">
+<h5 class="text-center text-[var(--primary)] text-[20px] font-semibold">Categories</h5>
+
+<div class="text-center flex overflow-x-auto justify-start max-w-[1280px] mx-auto custom-scroll px-4">
     <button class="ai-agents-category-button capitalize text-black whitespace-nowrap px-4 py-2 rounded-lg m-1 border-[3px] text-white active-btn" data-category="">
         <?php _e('All', 'wb'); ?>
     </button>
@@ -44,6 +47,7 @@ $pricing_options = get_terms(array(
         </button>
     <?php endforeach; ?>
 </div>
+</section>
 
 <!-- Loading Indicator -->
 <div id="loading-indicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
