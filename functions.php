@@ -277,38 +277,55 @@ function filter_tools_by_category()
             $tags = get_the_terms(get_the_ID(), 'ai-tool-tag');
 
             ?>
-            <div class="swiper-slide tool-slide"
-                data-link="<?php the_permalink(); ?>"
-                data-img="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>"
-                data-title="<?php the_title(); ?>"
-                data-excerpt="<?php echo wp_trim_words(get_the_excerpt(), 20); ?>"
-                data-price="<?php echo $price_from ? '$' . $price_from : '$' . $price; ?>"
-                data-tags="<?php echo esc_attr($tags); ?>">
-                <div class="bg-white rounded-xl overflow-hidden h-full flex flex-col">
-                    <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
-                        <?php if (has_post_thumbnail()): ?>
-                            <?php the_post_thumbnail('medium', array('class' => 'w-full h-[210px] object-cover')); ?>
-                        <?php else: ?>
-                            <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
-                        <?php endif; ?>
-                        <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
-                        <p class="text-[#5A6478] text-center text-[14px] font-normal">
-                            <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
-                        </p>
-                        <?php if ($price || $price_from): ?>
-                            <h1 class="flex gap-2 items-center justify-center text-[#1B1D1F] text-[14px] text-center mt-2">
-                                <?php _e('Price from', 'wb'); ?>
-                                <span class="text-[#1B1D1F] text-center text-[20px] font-semibold">
-                                    <?php echo $price_from ? '$' . $price_from : '$' . $price; ?>
-                                </span>
-                            </h1>
-                        <?php endif; ?>
-                    </div>
-                    <a href="<?php the_permalink(); ?>" class="block text-center font-bold py-3.5 rounded-b-sm bg-[var(--primary)] text-white mt-auto w-full">
-                        <?php _e('Buy Now', 'wb'); ?>
-                    </a>
-                </div>
-            </div>
+                                       <a href="<?php the_permalink(); ?>" class="swiper-slide tool-slide block h-full <?php echo $category_classes; ?>" data-categories="<?php echo esc_attr($data_categories); ?>">
+                                <div class="bg-white rounded-xl overflow-hidden h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
+                                    <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
+                                        <?php if (has_post_thumbnail()): ?>
+                                            <?php the_post_thumbnail('medium', array('class' => 'w-full h-[210px] object-cover')); ?>
+                                        <?php else: ?>
+                                            <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
+                                        <?php endif; ?>
+                                        <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
+                                        <p class="text-[#5A6478] text-center text-[14px] font-normal">
+                                            <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
+                                        </p>
+                                    </div>
+                                    <div class="p-4 pt-0 mt-auto">
+                                        <?php
+                                        // Get price and currency from meta fields
+                                        $tool_price = get_post_meta(get_the_ID(), '_amount', true);
+                                        $currency = get_post_meta(get_the_ID(), '_currency', true) ?: 'USD';
+
+                                        if ($tool_price !== ''):
+                                            ?>
+                                            <div class="flex flex-col items-center gap-1">
+                                                <?php if ($tool_price !== '0'): ?>
+                                                    <span class="text-[#5A6478] text-sm"><?php _e('Starting from', 'wb'); ?></span>
+                                                    <div class="flex items-center justify-center gap-1">
+                                                        <span class="text-[var(--primary)] text-2xl font-bold">
+                                                            <?php
+                                                            if ($tool_price === '0') {
+                                                                _e('FREE', 'wb');
+                                                            } else {
+                                                                echo esc_html($currency . $tool_price);
+                                                            }
+                                                            ?>
+                                                        </span>
+                                                    </div>
+                                                <?php else: ?>
+                                                    <span class="text-[var(--primary)] text-2xl font-bold">
+                                                        <?php _e('FREE', 'wb'); ?>
+                                                    </span>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="text-center py-2 text-[#5A6478] text-sm">
+                                                <?php _e('', 'wb'); ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </a>
         <?php
         }
     } else {
@@ -628,15 +645,16 @@ add_action('admin_menu', 'add_ai_tool_csv_import_menu');
 
 // CSV Import Page Content
 // Helper function to get attachment ID by filename
-function wb_get_attachment_id_by_filename($filename) {
+function wb_get_attachment_id_by_filename($filename)
+{
     global $wpdb;
-    
+
     // Remove query strings from filename
     $filename = preg_replace('/\?.*$/', '', $filename);
-    
+
     // Get just the filename without path
     $filename = basename($filename);
-    
+
     // Search for the attachment in the database
     $attachment = $wpdb->get_var($wpdb->prepare(
         "SELECT post_id FROM $wpdb->postmeta 
@@ -644,8 +662,8 @@ function wb_get_attachment_id_by_filename($filename) {
         AND meta_value LIKE %s",
         '%' . $wpdb->esc_like($filename)
     ));
-    
-    return $attachment ? (int)$attachment : 0;
+
+    return $attachment ? (int) $attachment : 0;
 }
 
 function ai_tool_csv_import_page()
@@ -775,7 +793,7 @@ function ai_tool_csv_import_page()
                                 if (!empty($logo_url)) {
                                     // First check if the image already exists in the media library
                                     $existing_logo_id = wb_get_attachment_id_by_filename($logo_url);
-                                    
+
                                     if ($existing_logo_id) {
                                         // Use existing attachment
                                         $logo_url_attached = wp_get_attachment_url($existing_logo_id);
@@ -785,7 +803,7 @@ function ai_tool_csv_import_page()
                                         require_once (ABSPATH . 'wp-admin/includes/file.php');
                                         require_once (ABSPATH . 'wp-admin/includes/media.php');
                                         require_once (ABSPATH . 'wp-admin/includes/image.php');
-                                        
+
                                         $logo_id = media_sideload_image($logo_url, $post_id, '', 'id');
                                         if (!is_wp_error($logo_id)) {
                                             $logo_url_attached = wp_get_attachment_url($logo_id);
@@ -795,12 +813,12 @@ function ai_tool_csv_import_page()
                                         }
                                     }
                                 }
-                                
+
                                 // Handle Featured Image (check if exists before uploading)
                                 if (!empty($image_url)) {
                                     // First check if the image already exists in the media library
                                     $existing_image_id = wb_get_attachment_id_by_filename($image_url);
-                                    
+
                                     if ($existing_image_id) {
                                         // Use existing attachment
                                         set_post_thumbnail($post_id, $existing_image_id);
@@ -809,7 +827,7 @@ function ai_tool_csv_import_page()
                                         require_once (ABSPATH . 'wp-admin/includes/file.php');
                                         require_once (ABSPATH . 'wp-admin/includes/media.php');
                                         require_once (ABSPATH . 'wp-admin/includes/image.php');
-                                        
+
                                         $image_id = media_sideload_image($image_url, $post_id, '', 'id');
                                         if (!is_wp_error($image_id)) {
                                             set_post_thumbnail($post_id, $image_id);
@@ -977,7 +995,7 @@ function ai_agent_csv_import_page()
                                 }
                                 if (!empty($logo_url)) {
                                     $existing_logo_id = wb_get_attachment_id_by_filename($logo_url);
-                                    
+
                                     if ($existing_logo_id) {
                                         // Use existing attachment
                                         $logo_url_attached = wp_get_attachment_url($existing_logo_id);
@@ -987,7 +1005,7 @@ function ai_agent_csv_import_page()
                                         require_once (ABSPATH . 'wp-admin/includes/file.php');
                                         require_once (ABSPATH . 'wp-admin/includes/media.php');
                                         require_once (ABSPATH . 'wp-admin/includes/image.php');
-                                        
+
                                         $logo_id = media_sideload_image($logo_url, $post_id, '', 'id');
                                         if (!is_wp_error($logo_id)) {
                                             $logo_url_attached = wp_get_attachment_url($logo_id);
@@ -999,7 +1017,7 @@ function ai_agent_csv_import_page()
                                 }
                                 if (!empty($image_url)) {
                                     $existing_image_id = wb_get_attachment_id_by_filename($image_url);
-                                    
+
                                     if ($existing_image_id) {
                                         // Use existing attachment
                                         set_post_thumbnail($post_id, $existing_image_id);
@@ -1008,7 +1026,7 @@ function ai_agent_csv_import_page()
                                         require_once (ABSPATH . 'wp-admin/includes/file.php');
                                         require_once (ABSPATH . 'wp-admin/includes/media.php');
                                         require_once (ABSPATH . 'wp-admin/includes/image.php');
-                                        
+
                                         $image_id = media_sideload_image($image_url, $post_id, '', 'id');
                                         if (!is_wp_error($image_id)) {
                                             set_post_thumbnail($post_id, $image_id);
@@ -1149,7 +1167,8 @@ function enqueue_filter_scripts()
 add_action('wp_enqueue_scripts', 'enqueue_filter_scripts');
 
 // Enqueue AI Agents filter script
-function enqueue_ai_agents_filter_scripts() {
+function enqueue_ai_agents_filter_scripts()
+{
     if (is_post_type_archive('ai-agent') || is_tax('ai-agent-category')) {
         wp_enqueue_script(
             'ai-agents-filter',
@@ -1166,13 +1185,15 @@ function enqueue_ai_agents_filter_scripts() {
         ));
     }
 }
+
 add_action('wp_enqueue_scripts', 'enqueue_ai_agents_filter_scripts');
 
 // AJAX handler for filtering AI Agents
 add_action('wp_ajax_filter_ai_agents', 'filter_ai_agents_callback');
 add_action('wp_ajax_nopriv_filter_ai_agents', 'filter_ai_agents_callback');
 
-function filter_ai_agents_callback() {
+function filter_ai_agents_callback()
+{
     // Verify nonce
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ai_agents_filter_nonce')) {
         wp_send_json_error('Invalid nonce');
@@ -1180,7 +1201,7 @@ function filter_ai_agents_callback() {
 
     // Get and sanitize input
     $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '';
-    
+
     // Handle features - could be array or JSON string
     $features = array();
     if (isset($_POST['features'])) {
@@ -1191,7 +1212,7 @@ function filter_ai_agents_callback() {
             $features = is_array($decoded) ? array_map('sanitize_text_field', $decoded) : array();
         }
     }
-    
+
     // Handle pricing - could be array or JSON string
     $pricing = array();
     if (isset($_POST['pricing'])) {
@@ -1207,15 +1228,15 @@ function filter_ai_agents_callback() {
     $args = array(
         'post_type' => 'ai-agent',
         'posts_per_page' => 12,
-        'paged' => 1, // Always show first page on filter
+        'paged' => 1,  // Always show first page on filter
     );
 
     // Add category filter
     if (!empty($category)) {
         $args['tax_query'][] = array(
             'taxonomy' => 'ai-agent-category',
-            'field'    => 'slug',
-            'terms'    => $category,
+            'field' => 'slug',
+            'terms' => $category,
         );
     }
 
@@ -1223,8 +1244,8 @@ function filter_ai_agents_callback() {
     if (!empty($features)) {
         $args['tax_query'][] = array(
             'taxonomy' => 'ai-agent-tag',
-            'field'    => 'slug',
-            'terms'    => $features,
+            'field' => 'slug',
+            'terms' => $features,
             'operator' => 'AND',
         );
     }
@@ -1233,8 +1254,8 @@ function filter_ai_agents_callback() {
     if (!empty($pricing)) {
         $args['tax_query'][] = array(
             'taxonomy' => 'ai-agent-pricing-option',
-            'field'    => 'slug',
-            'terms'    => $pricing,
+            'field' => 'slug',
+            'terms' => $pricing,
         );
     }
 
@@ -1246,14 +1267,15 @@ function filter_ai_agents_callback() {
     $query = new WP_Query($args);
     ob_start();
 
-    if ($query->have_posts()) :
-        while ($query->have_posts()) : $query->the_post();
+    if ($query->have_posts()):
+        while ($query->have_posts()):
+            $query->the_post();
             ?>
             <a href="<?php the_permalink(); ?>" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
                 <div class="flex flex-col flex-1 w-full gap-3">
-                    <?php if (has_post_thumbnail()) : ?>
+                    <?php if (has_post_thumbnail()): ?>
                         <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover rounded-md']); ?>
-                    <?php else : ?>
+                    <?php else: ?>
                         <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover rounded-md" />
                     <?php endif; ?>
                     <h1 class="text-[#1B1D1F] text-[20px] font-semibold"><?php the_title(); ?></h1>
@@ -1277,7 +1299,7 @@ function filter_ai_agents_callback() {
             <?php
         endwhile;
         wp_reset_postdata();
-    else :
+    else:
         ?>
         <p class="text-center w-full col-span-3"><?php _e('No agents found.', 'wb'); ?></p>
         <?php
