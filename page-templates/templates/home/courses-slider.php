@@ -32,9 +32,14 @@
             if ($courses->have_posts()):
               while ($courses->have_posts()):
                 $courses->the_post();
+                $categories = wp_get_post_terms(get_the_ID(), 'course-category', array('fields' => 'ids'));
+                $category_classes = implode(' ', array_map(function ($cat) {
+                    return 'category-' . $cat;
+                }, $categories));
+                $data_categories = implode(',', array_map('strval', $categories));
                 ?>
-            <div class="swiper-slide tool-slide">
-              <div class="bg-white rounded-xl h-full flex flex-col overflow-hidden border border-[#C9C9C961]">
+            <a href="<?php the_permalink(); ?>" class="swiper-slide tool-slide block h-full <?php echo $category_classes; ?>" data-categories="<?php echo esc_attr($data_categories); ?>">
+              <div class="bg-white rounded-xl h-full flex flex-col overflow-hidden border border-[#C9C9C961] hover:shadow-lg transition-shadow duration-300">
                 <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
                   <?php if (has_post_thumbnail()): ?>
                     <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
@@ -44,9 +49,42 @@
                   <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
                   <p class="text-[#5A6478] text-center text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
                 </div>
-                <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 bg-[var(--primary)] text-white w-full font-bold">Buy Now</a>
+                <div class="p-4 pt-0 mt-auto">
+                  <?php 
+                  // Get price and currency from meta fields
+                  $course_price = get_post_meta(get_the_ID(), '_amount', true);
+                  $currency = get_post_meta(get_the_ID(), '_currency', true) ?: 'USD';
+                  
+                  if ($course_price !== ''): 
+                  ?>
+                    <div class="flex flex-col items-center gap-1">
+                      <?php if ($course_price !== '0'): ?>
+                        <span class="text-[#5A6478] text-sm"><?php _e('Starting from', 'wb'); ?></span>
+                        <div class="flex items-center justify-center gap-1">
+                          <span class="text-[var(--primary)] text-2xl font-bold">
+                            <?php 
+                            if ($course_price === '0') {
+                                _e('FREE', 'wb');
+                            } else {
+                                echo esc_html($currency . $course_price);
+                            }
+                            ?>
+                          </span>
+                        </div>
+                      <?php else: ?>
+                        <span class="text-[var(--primary)] text-2xl font-bold">
+                          <?php _e('FREE', 'wb'); ?>
+                        </span>
+                      <?php endif; ?>
+                    </div>
+                  <?php else: ?>
+                    <div class="text-center py-2 text-[#5A6478] text-sm">
+                      <?php _e('', 'wb'); ?>
+                    </div>
+                  <?php endif; ?>
+                </div>
               </div>
-            </div>
+            </a>
             <?php endwhile;
               wp_reset_postdata();
             else: ?>
