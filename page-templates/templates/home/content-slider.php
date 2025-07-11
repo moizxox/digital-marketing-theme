@@ -31,20 +31,58 @@
               while ($contents->have_posts()):
                 $contents->the_post();
                 ?>
-            <div class="swiper-slide content-slide">
-            <a href="<?php the_permalink(); ?>" class="bg-white rounded-sm h-full flex flex-col border border-[#C9C9C961] overflow-hidden">
+            <div class="swiper-slide content-slide h-full">
+                <a href="<?php the_permalink(); ?>" class="block bg-white rounded-sm h-full flex flex-col border border-[#C9C9C961] overflow-hidden hover:shadow-lg transition-shadow duration-300">
                     <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
-                        <?php if (has_post_thumbnail()): ?>
-                            <?php the_post_thumbnail('medium', ['class' => 'w-full h-[210px] object-cover']); ?>
-                        <?php else: ?>
-                            <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover" />
-                        <?php endif; ?>
-                        <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
-                        <p class="text-[#5A6478] text-center text-[14px] font-normal">
-                            <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
-                        </p>
+                        <?php 
+                        // First try to get the featured image
+                        $thumbnail_id = get_post_thumbnail_id();
+                        
+                        if ($thumbnail_id) {
+                            // Get the image source with medium size
+                            $thumbnail_src = wp_get_attachment_image_src($thumbnail_id, 'medium');
+                            if ($thumbnail_src && !empty($thumbnail_src[0])) {
+                                echo '<img src="' . esc_url($thumbnail_src[0]) . '" alt="' . esc_attr(get_the_title()) . '" class="w-full h-[210px] object-cover" loading="lazy" />';
+                            } else {
+                                // Try to get the full size if medium is not available
+                                $full_src = wp_get_attachment_image_src($thumbnail_id, 'full');
+                                if ($full_src && !empty($full_src[0])) {
+                                    echo '<img src="' . esc_url($full_src[0]) . '" alt="' . esc_attr(get_the_title()) . '" class="w-full h-[210px] object-cover" loading="lazy" />';
+                                } else {
+                                    // Fallback to default image
+                                    echo '<img src="' . esc_url(get_template_directory_uri() . '/images/placeholder.jpg') . '" alt="' . esc_attr(get_the_title()) . '" class="w-full h-[210px] object-cover" />';
+                                }
+                            }
+                        } else {
+                            // Check if there are any images attached to the post
+                            $attachments = get_posts(array(
+                                'post_type' => 'attachment',
+                                'posts_per_page' => 1,
+                                'post_parent' => get_the_ID(),
+                                'exclude' => get_post_thumbnail_id()
+                            ));
+                            
+                            if ($attachments) {
+                                $first_attachment = wp_get_attachment_image_src($attachments[0]->ID, 'medium');
+                                if ($first_attachment && !empty($first_attachment[0])) {
+                                    echo '<img src="' . esc_url($first_attachment[0]) . '" alt="' . esc_attr(get_the_title()) . '" class="w-full h-[210px] object-cover" loading="lazy" />';
+                                } else {
+                                    // Fallback to default image
+                                    echo '<img src="' . esc_url(get_template_directory_uri() . '/images/placeholder.jpg') . '" alt="' . esc_attr(get_the_title()) . '" class="w-full h-[210px] object-cover" />';
+                                }
+                            } else {
+                                // Default image if no images found
+                                echo '<img src="' . esc_url(get_template_directory_uri() . '/images/placeholder.jpg') . '" alt="' . esc_attr(get_the_title()) . '" class="w-full h-[210px] object-cover" />';
+                            }
+                        }
+                        ?>
+                        <div class="flex-1 flex flex-col">
+                            <h1 class="text-[#1B1D1F] text-center text-[20px] font-semibold"><?php the_title(); ?></h1>
+                            <p class="text-[#5A6478] text-center text-[14px] font-normal mt-2">
+                                <?php echo wp_trim_words(get_the_excerpt(), 15); ?>
+                            </p>
+                        </div>
                     </div>
-                    
                 </a>
             </div>
             <?php endwhile;
