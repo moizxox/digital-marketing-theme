@@ -24,7 +24,7 @@
             <h1 class="text-[28px] md:text-[40px] font-extrabold text-white text-center" >
                 One Stop Shop For All Your <span class="text-[var(--secondary)]">AI Marketing</span> Needs
             </h1>
-            <p class="text-[20px] text-center">Discover cutting-edge AI marketing tools and intelligent agent to transform your marketing strategy and drive unprecedented growth</p>
+            <p class="text-[20px] text-center">Discover cutting-edge AI Marketing Tools and AI Marketing Agents to transform your marketing and drive unprecedented growth</p>
             <div class="flex flex-col sm:flex-row gap-5">
                 <a href="/ai-tools/" class="bg-[var(--secondary)] border border-[var(--secondary)] text-[var(--primary)] py-3 px-4 rounded-md flex items-center gap-2 font-semibold"> <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-tool-btn.svg" alt="">Explore AI Tools</a>
                 <a href="/ai-agents/" class="bg-[var(--secondary)] border border-[var(--secondary)] text-[var(--primary)] py-3 px-4 rounded-md flex items-center gap-2 font-semibold"> <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-agent-btn.svg" alt="">Explore AI Agents</a>
@@ -33,20 +33,20 @@
         </div>
         <div class="flex flex-col gap-5 py-[24px] px-4 rounded-lg bg-[var(--dark-primary)] items-center max-w-[900px] mx-auto">
             <h3 class="text-white uppercase text-[22px] font-bold">Whats the difference?</h3>
-            <div class="flex flex-col sm:flex-row gap-5">
-                <div class="flex flex-col gap-5 p-3 rounded-lg bg-[var(--primary)]">
+            <div class="flex flex-col sm:flex-row gap-5 ">
+                <div class="flex flex-col gap-5 p-3 rounded-lg bg-[var(--primary)] w-full">
                     <div class="flex items-center gap-3 justify-between">
                         <h4 class="text-[var(--secondary)] text-[20px] font-semibold">AI Marketing Tools</h4>
                         <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-tools-yl.svg" alt="">
                     </div>
-                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution</p>
+                    <p>AI Marketing Tools are powerful software solutions that assist with specific tasks like SEO analysis, content generation, email automation, and campaign tracking. They require human input and decision-making to deliver results</p>
                 </div>
-                <div class="flex flex-col gap-5 p-3 rounded-lg bg-[var(--primary)]">
+                <div class="flex flex-col gap-5 p-3 rounded-lg bg-[var(--primary)] w-full">
                     <div class="flex items-center gap-3 justify-between">
                         <h4 class="text-[var(--secondary)] text-[20px] font-semibold">AI Marketing Agents</h4>
                         <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-agents-yl.svg" alt="">
                     </div>
-                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution</p>
+                    <p>AI Marketing Agents are more autonomous, acting like intelligent virtual assistants that can plan, execute, and optimize marketing tasks with minimal supervision. Think of tools as instruments — and agents as proactive team members who use those instruments on your behalf.</p>
                 </div>
             </div>
         </div>

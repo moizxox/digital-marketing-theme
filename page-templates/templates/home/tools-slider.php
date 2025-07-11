@@ -62,8 +62,8 @@
                                 }, $categories));
                                 $data_categories = implode(',', array_map('strval', $categories));
                                 ?>
-                            <div class="swiper-slide tool-slide <?php echo $category_classes; ?>" data-categories="<?php echo esc_attr($data_categories); ?>">
-                                <div class="bg-white rounded-xl overflow-hidden h-full flex flex-col">
+                            <a href="<?php the_permalink(); ?>" class="swiper-slide tool-slide block h-full <?php echo $category_classes; ?>" data-categories="<?php echo esc_attr($data_categories); ?>">
+                                <div class="bg-white rounded-xl overflow-hidden h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
                                     <div class="p-4 flex flex-col items-center flex-1 w-full gap-3">
                                         <?php if (has_post_thumbnail()): ?>
                                             <?php the_post_thumbnail('medium', array('class' => 'w-full h-[210px] object-cover')); ?>
@@ -74,20 +74,43 @@
                                         <p class="text-[#5A6478] text-center text-[14px] font-normal">
                                             <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
                                         </p>
-                                        <?php if ($price || $price_from): ?>
-                                            <h1 class="flex gap-2 items-center justify-center text-[#1B1D1F] text-[14px] text-center mt-2">
-                                                <?php _e('Price from', 'wb'); ?>
-                                                <span class="text-[#1B1D1F] text-center text-[20px] font-semibold">
-                                                    <?php echo $price_from ? '$' . $price_from : '$' . $price; ?>
-                                                </span>
-                                            </h1>
+                                    </div>
+                                    <div class="p-4 pt-0 mt-auto">
+                                        <?php
+                                        // Get price and currency from meta fields
+                                        $tool_price = get_post_meta(get_the_ID(), '_amount', true);
+                                        $currency = get_post_meta(get_the_ID(), '_currency', true) ?: 'USD';
+
+                                        if ($tool_price !== ''):
+                                            ?>
+                                            <div class="flex flex-col items-center gap-1">
+                                                <?php if ($tool_price !== '0'): ?>
+                                                    <span class="text-[#5A6478] text-sm"><?php _e('Starting from', 'wb'); ?></span>
+                                                    <div class="flex items-center justify-center gap-1">
+                                                        <span class="text-[var(--primary)] text-2xl font-bold">
+                                                            <?php
+                                                            if ($tool_price === '0') {
+                                                                _e('FREE', 'wb');
+                                                            } else {
+                                                                echo esc_html($currency . $tool_price);
+                                                            }
+                                                            ?>
+                                                        </span>
+                                                    </div>
+                                                <?php else: ?>
+                                                    <span class="text-[var(--primary)] text-2xl font-bold">
+                                                        <?php _e('FREE', 'wb'); ?>
+                                                    </span>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="text-center py-2 text-[#5A6478] text-sm">
+                                                <?php _e('', 'wb'); ?>
+                                            </div>
                                         <?php endif; ?>
                                     </div>
-                                    <a href="<?php the_permalink(); ?>" class="block text-center py-3.5 font-bold rounded-b-sm bg-[var(--primary)] text-white mt-auto w-full">
-                                        <?php _e('Buy Now', 'wb'); ?>
-                                    </a>
                                 </div>
-                            </div>
+                            </a>
                         <?php
                             endwhile;
                         else:
