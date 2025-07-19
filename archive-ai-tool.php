@@ -25,15 +25,15 @@ $pricing_options = get_terms(array(
 <section class="py-16 text-white" style="background-color: var(--primary);">
 	<div class="container mx-auto px-4 text-center max-w-[1280px]">
 		<h1 class="text-4xl font-bold mb-6 text-white"><?php _e('AI Tools', 'wb'); ?></h1>
-		<p class="text-center text-[14px]">Discover the best AI marketing tools for SEO, content marketing, email, social media, and more. Use AI to automate repetitive tasks, improve performance, and scale your efforts with cutting-edge technology. Compare tools, and find the right fit for your goals.</p>
+		<p class="text-center">Discover the best AI marketing tools for SEO, content marketing, email, social media, and more. Use AI to automate repetitive tasks, improve performance, and scale your efforts with cutting-edge technology. Compare tools, and find the right fit for your goals.</p>
 	</div>
 </section>
 
 <section class="py-8">
 <h5 class="text-center text-[var(--primary)] text-[20px] font-semibold">Categories</h5>
 
-<div class=" text-center flex overflow-x-auto justify-start max-w-[1280px] mx-auto custom-scroll px-4">
-	<button class="category-button capitalize text-black whitespace-nowrap  px-4 py-2 rounded-lg m-1 border-[3px] text-white active-btn" data-category="">
+<div class=" text-center flex justify-center max-w-[1280px] mx-auto px-4 flex-wrap">
+	<button class="category-button capitalize text-black px-4 py-2 rounded-lg m-1 border-[3px] text-white active-btn" data-category="">
 		<?php _e('All', 'wb'); ?>
 	</button>
 	<?php
@@ -42,7 +42,7 @@ $pricing_options = get_terms(array(
 	foreach ($categories as $category):
 		$is_active = $current_cat === $category->slug ? 'active-btn text-white' : '';
 		?>
-		<button class="category-button capitalize text-black whitespace-nowrap bg-transparent px-4 py-2 rounded-lg m-1 border-[3px]  <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
+		<button class="category-button capitalize text-black bg-transparent px-4 py-2 rounded-lg m-1 border-[3px]  <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
 			<?php echo $category->name; ?>
 		</button>
 	<?php endforeach; ?>

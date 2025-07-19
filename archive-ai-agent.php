@@ -26,15 +26,15 @@ $pricing_options = get_terms(array(
 <section class="py-16 text-white" style="background-color: var(--primary);">
     <div class="container mx-auto px-4 text-center max-w-[1280px]">
         <h1 class="text-4xl font-bold mb-6 text-white"><?php _e('AI Agents', 'wb'); ?></h1>
-        <p class="text-center text-[14px]">Explore the ultimate directory of AI Marketing Agents designed to automate campaigns, boost ROI, and streamline your workflow. From SEO to content creation, discover powerful AI tools, compare features, and find the perfect agent to supercharge your digital marketing.</p>
+        <p class="text-center">Explore the ultimate directory of AI Marketing Agents designed to automate campaigns, boost ROI, and streamline your workflow. From SEO to content creation, discover powerful AI tools, compare features, and find the perfect agent to supercharge your digital marketing.</p>
     </div>
 </section>
 
 <section class="py-8">
 <h5 class="text-center text-[var(--primary)] text-[20px] font-semibold">Categories</h5>
 
-<div class="text-center flex overflow-x-auto justify-start max-w-[1280px] mx-auto custom-scroll px-4">
-    <button class="ai-agents-category-button capitalize text-black whitespace-nowrap px-4 py-2 rounded-lg m-1 border-[3px] text-white active-btn" data-category="">
+<div class="text-center flex flex-wrap justify-center max-w-[1280px] mx-auto px-4">
+    <button class="ai-agents-category-button capitalize text-black px-4 py-2 rounded-lg m-1 border-[3px] text-white active-btn" data-category="">
         <?php _e('All', 'wb'); ?>
     </button>
     <?php
@@ -43,7 +43,7 @@ $pricing_options = get_terms(array(
     foreach ($categories as $category):
         $is_active = $current_cat === $category->slug ? 'active-btn text-white' : '';
         ?>
-        <button class="ai-agents-category-button capitalize text-black whitespace-nowrap bg-transparent px-4 py-2 rounded-lg m-1 border-[3px] <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
+        <button class="ai-agents-category-button capitalize text-black bg-transparent px-4 py-2 rounded-lg m-1 border-[3px] <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
             <?php echo $category->name; ?>
         </button>
     <?php endforeach; ?>

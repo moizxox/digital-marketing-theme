@@ -27,7 +27,7 @@
             <p class="text-[20px] text-center">Discover cutting-edge AI Marketing Tools and AI Marketing Agents to transform your marketing and drive unprecedented growth</p>
             <div class="flex flex-col sm:flex-row gap-5">
                 <a href="/ai-tools/" class="bg-[var(--secondary)] border border-[var(--secondary)] text-[var(--primary)] py-3 px-4 rounded-md flex items-center gap-2 font-semibold"> <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-tool-btn.svg" alt="">Explore AI Tools</a>
-                <a href="/ai-agents/" class="bg-[var(--secondary)] border border-[var(--secondary)] text-[var(--primary)] py-3 px-4 rounded-md flex items-center gap-2 font-semibold"> <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-agent-btn.svg" alt="">Explore AI Agents</a>
+                <a href="/ai-agents/" class="bg-[var(--secondary)] border border-[var(--secondary)] text-[var(--primary)] py-3 px-4 rounded-md flex items-center gap-2 font-semibold"> <img src="<?php echo get_template_directory_uri(); ?>/images/icon/ai-agent-btn.png" alt="">Explore AI Agents</a>
 
             </div>
         </div>
@@ -69,10 +69,7 @@
 
         <!-- Radio Filters -->
         <div class="flex flex-wrap gap-4 justify-center text-white radio-div">
-            <label class="flex items-center gap-2 cursor-pointer" for="tools">
-                <input type="radio" name="type" id="tools" value="tool" class="accent-[#FFCC00]" checked>
-                <span>Tools</span>
-            </label>
+            
             <label class="flex items-center gap-2 cursor-pointer" for="ai-tools">
                 <input type="radio" name="type" id="ai-tools" value="ai-tool" class="accent-[#FFCC00]">
                 <span>AI Tools</span>
@@ -81,13 +78,17 @@
                 <input type="radio" name="type" id="ai-agents" value="ai-agent" class="accent-[#FFCC00]">
                 <span>AI Agents</span>
             </label>
-            <label class="flex items-center gap-2 cursor-pointer" for="courses">
-                <input type="radio" name="type" id="courses" value="course" class="accent-[#FFCC00]">
-                <span>Courses</span>
+            <label class="flex items-center gap-2 cursor-pointer" for="tools">
+                <input type="radio" name="type" id="tools" value="tool" class="accent-[#FFCC00]" checked>
+                <span>Tools</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer" for="services">
                 <input type="radio" name="type" id="services" value="service" class="accent-[#FFCC00]">
                 <span>Services</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer" for="courses">
+                <input type="radio" name="type" id="courses" value="course" class="accent-[#FFCC00]">
+                <span>Courses</span>
             </label>
         </div>
     </form>

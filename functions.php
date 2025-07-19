@@ -450,20 +450,7 @@ function filter_ai_tools_by_category()
                         <?php endif; ?>
                         <h1 class="text-[#1B1D1F] text-[20px] font-semibold"><?php the_title(); ?></h1>
                         <p class="text-[#5A6478] text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
-                        <div class="ai-tool-features">
-                            <?php
-                            $tags = get_the_terms(get_the_ID(), 'ai-tool-tag');
-                            if ($tags && !is_wp_error($tags)) {
-                                echo '<ul class="feature-list flex gap-2 flex-wrap">';
-                                foreach ($tags as $tag) {
-                                    echo '<li class="text-[var(--primary)] bg-[#0F44F31A] p-2 text-[14px] font-normal rounded-full">' . esc_html($tag->name) . '</li>';
-                                }
-                                echo '</ul>';
-                            } else {
-                                echo '<p>No tags available.</p>';
-                            }
-                            ?>
-                        </div>
+                        
                     </div>
                 </a>
             </div>
