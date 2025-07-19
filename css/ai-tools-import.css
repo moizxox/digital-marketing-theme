@@ -1,0 +1,84 @@
+/* AI Tools Import Styles */
+#import-progress {
+    margin: 20px 0;
+    display: none;
+}
+
+#progress-bar {
+    background: #f0f0f0;
+    height: 20px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+}
+
+#progress-bar-fill {
+    background: #0073aa;
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease-in-out;
+}
+
+#progress-text {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+#progress-details {
+    margin-top: 15px;
+}
+
+#progress-details .notice {
+    margin: 5px 0;
+    padding: 5px 10px;
+}
+
+#import-message {
+    margin: 15px 0;
+    padding: 10px 15px;
+    border-left: 4px solid #dc3232;
+}
+
+#import-message.notice-success {
+    border-left-color: #46b450;
+}
+
+/* Form styles */
+#csv-import-form .form-table {
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+#csv-import-form .form-table th {
+    width: 200px;
+    padding: 20px 10px 20px 0;
+}
+
+#csv-import-form .form-table td {
+    padding: 15px 10px;
+}
+
+#csv-import-form input[type="file"] {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+    #csv-import-form .form-table th,
+    #csv-import-form .form-table td {
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+    }
+    
+    #csv-import-form .form-table th {
+        padding-top: 20px;
+    }
+}
