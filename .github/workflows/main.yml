@@ -23,7 +23,7 @@ jobs:
           username: ${{ secrets.USERNAME }} # 👤 FTP/SFTP username
           password: ${{ secrets.SFTP_PASSWORD }} # 🔑 Stored in GitHub secrets
           port: 22 # 🚪 SFTP port
-          source: "./*" # 📂 All files in root
+          source: "!**/.git/**,**" # 📂 All files except .git folder
           target: "/home/dh_5egysr/digitalmarketingsupermarket.com/wp-content/themes/digital-marketing-wordpress/" # 🎯 Theme path on server
 
       - name: ✅ Deployment finished
