@@ -42,7 +42,7 @@ $pricing_options = get_terms(array(
     foreach ($categories as $category):
         $is_active = $current_cat === $category->slug ? 'active-btn text-white' : '';
         ?>
-		<button class="category-button capitalize text-black bg-bg-[#94a9ff] px-4 py-2 rounded-lg m-1 border-[3px]  <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
+		<button class="category-button capitalize text-black bg-[#94a9ff] px-4 py-2 rounded-lg m-1 border-[3px]  <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
 			<?php echo $category->name; ?>
 		</button>
 	<?php endforeach; ?>
