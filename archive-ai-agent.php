@@ -68,40 +68,63 @@ $pricing_options = get_terms(array(
                     </button>
                 </div>
                 <div id="filterSidebar" class="bg-gray-100 p-6 rounded-lg hidden lg:block">
-                    <h2 class="text-xl font-semibold mb-4"><?php _e('Filter AI Agents', 'wb'); ?></h2>
+                    <h2 class="text-xl font-semibold mb-6"><?php _e('Filter AI Agents', 'wb'); ?></h2>
                     <form id="ai-agents-filter" method="get" class="space-y-6">
-                        <div>
-                            <h3 class="font-medium mb-2"><?php _e('Features', 'wb'); ?></h3>
-                            <ul class="space-y-2">
+                        <!-- Features Section -->
+                        <div class="filter-section">
+                            <h3><?php _e('Features', 'wb'); ?></h3>
+                            <input type="text" id="featureSearch" placeholder="Search features..." class="filter-search">
+                            <div class="filter-list" id="featuresList">
                                 <?php
                                 $tags = get_terms(array('taxonomy' => 'ai-agent-tag', 'hide_empty' => false));
-                                foreach ($tags as $tag):
-                                    ?>
-                                    <li>
-                                        <label class="flex items-center gap-2">
-                                            <input type="checkbox" name="features[]" value="<?php echo $tag->slug; ?>" <?php checked(in_array($tag->slug, $_GET['features'] ?? [])); ?> class="form-checkbox">
-                                            <span><?php echo $tag->name; ?></span>
-                                        </label>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
+                                if (!empty($tags) && !is_wp_error($tags)): ?>
+                                    <ul class="space-y-2">
+                                        <?php foreach ($tags as $tag): ?>
+                                            <li>
+                                                <label class="flex items-center gap-2">
+                                                    <input type="checkbox" name="features[]" value="<?php echo $tag->slug; ?>" 
+                                                           <?php checked(in_array($tag->slug, $_GET['features'] ?? [])); ?> 
+                                                           class="form-checkbox feature-checkbox">
+                                                    <span class="feature-name"><?php echo $tag->name; ?></span>
+                                                </label>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php else: ?>
+                                    <p class="no-results"><?php _e('No features available', 'wb'); ?></p>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="font-medium mb-2"><?php _e('Pricing Options', 'wb'); ?></h3>
-                            <ul class="space-y-2">
+
+                        <!-- Pricing Options Section -->
+                        <div class="filter-section">
+                            <h3><?php _e('Pricing Options', 'wb'); ?></h3>
+                            <input type="text" id="pricingSearch" placeholder="Search pricing options..." class="filter-search">
+                            <div class="filter-list" id="pricingList">
                                 <?php
                                 $pricing_options = get_terms(array('taxonomy' => 'ai-agent-pricing-option', 'hide_empty' => false));
-                                foreach ($pricing_options as $option):
-                                    ?>
-                                    <li>
-                                        <label class="flex items-center gap-2">
-                                            <input type="checkbox" name="pricing[]" value="<?php echo $option->slug; ?>" <?php checked(in_array($option->slug, $_GET['pricing'] ?? [])); ?> class="form-checkbox">
-                                            <span><?php echo $option->name; ?></span>
-                                        </label>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
+                                if (!empty($pricing_options) && !is_wp_error($pricing_options)): ?>
+                                    <ul class="space-y-2">
+                                        <?php foreach ($pricing_options as $option): ?>
+                                            <li>
+                                                <label class="flex items-center gap-2">
+                                                    <input type="checkbox" name="pricing[]" value="<?php echo $option->slug; ?>" 
+                                                           <?php checked(in_array($option->slug, $_GET['pricing'] ?? [])); ?> 
+                                                           class="form-checkbox pricing-checkbox">
+                                                    <span class="pricing-name"><?php echo $option->name; ?></span>
+                                                </label>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php else: ?>
+                                    <p class="no-results"><?php _e('No pricing options available', 'wb'); ?></p>
+                                <?php endif; ?>
+                            </div>
                         </div>
+
+                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                            <?php _e('Apply Filters', 'wb'); ?>
+                        </button>
                     </form>
                 </div>
             </aside>
@@ -382,37 +405,109 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <style>
-/* Loading indicator styles */
-#loading-indicator {
-    transition: opacity 0.3s ease;
-}
+    /* Filter sidebar styles */
+    .filter-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-section h3 {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #374151;
+    }
+    
+    .filter-search {
+        width: 100%;
+        padding: 0.5rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+    }
+    
+    .filter-list {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        scrollbar-width: thin;
+        scrollbar-color: #9ca3af #f3f4f6;
+    }
+    
+    .filter-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .filter-list::-webkit-scrollbar-track {
+        background: #f3f4f6;
+        border-radius: 3px;
+    }
+    
+    .filter-list::-webkit-scrollbar-thumb {
+        background-color: #9ca3af;
+        border-radius: 3px;
+    }
+    
+    .filter-list li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .filter-list label {
+        display: flex;
+        align-items: center;
+        padding: 0.375rem 0.5rem;
+        border-radius: 0.25rem;
+        transition: background-color 0.15s;
+    }
+    
+    .filter-list label:hover {
+        background-color: #f3f4f6;
+    }
+    
+    .filter-list input[type="checkbox"] {
+        margin-right: 0.5rem;
+    }
+    
+    .no-results {
+        color: #6b7280;
+        font-style: italic;
+        padding: 0.5rem 0;
+    }
 
-/* Animation for the loading spinner */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+    /* Loading indicator styles */
+    #loading-indicator {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
 
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
+    #loading-indicator > div {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-/* Ensure smooth transitions for the results */
-#results {
-    transition: opacity 0.3s ease;
-}
+    #loading-indicator .spinner {
+        display: inline-block;
+        width: 2rem;
+        height: 2rem;
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: #3b82f6;
+        animation: spin 1s ease-in-out infinite;
+    }
 
-#results.loading {
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-/* Style for active filter buttons */
-.active-btn {
-    background-color: var(--primary) !important;
-    border-color: var(--primary) !important;
-    color: white !important;
-}
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
 </style>
 
-<?php get_footer(); ?> 
+<?php get_footer(); ?>
