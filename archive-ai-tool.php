@@ -1,21 +1,21 @@
 <?php
 
 if (!defined('ABSPATH')) {
-	exit;
+    exit;
 }
 
 get_header();
 
 $type = 'ai-tool';
 $pricing_options = get_terms(array(
-	'taxonomy' => $type . '-pricing-option',
-	'orderby' => 'ID',
-	'order' => 'ASC'
+    'taxonomy' => $type . '-pricing-option',
+    'orderby' => 'ID',
+    'order' => 'ASC'
 ));
 
 ?>
 <style>
-	.category-button.active-btn {
+	.category.active-btn {
     border-color: var(--primary);
     color: #fff;
 	background-color: var(--primary);
@@ -37,12 +37,12 @@ $pricing_options = get_terms(array(
 		<?php _e('All', 'wb'); ?>
 	</button>
 	<?php
-	$categories = get_terms(array('taxonomy' => 'ai-tool-category', 'hide_empty' => false));
-	$current_cat = $_GET['category'] ?? '';
-	foreach ($categories as $category):
-		$is_active = $current_cat === $category->slug ? 'active-btn text-white' : '';
-		?>
-		<button class="category-button capitalize text-black bg-transparent px-4 py-2 rounded-lg m-1 border-[3px]  <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
+    $categories = get_terms(array('taxonomy' => 'ai-tool-category', 'hide_empty' => false));
+    $current_cat = $_GET['category'] ?? '';
+    foreach ($categories as $category):
+        $is_active = $current_cat === $category->slug ? 'active-btn text-white' : '';
+        ?>
+		<button class="category-button capitalize text-black bg-bg-[#94a9ff] px-4 py-2 rounded-lg m-1 border-[3px]  <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
 			<?php echo $category->name; ?>
 		</button>
 	<?php endforeach; ?>
@@ -70,7 +70,8 @@ $pricing_options = get_terms(array(
                             <div class="filter-list" id="featuresList">
                                 <?php
                                 $tags = get_terms(array('taxonomy' => 'ai-tool-tag', 'hide_empty' => false));
-                                if (!empty($tags) && !is_wp_error($tags)): ?>
+                                if (!empty($tags) && !is_wp_error($tags)):
+                                    ?>
                                     <ul class="space-y-2">
                                         <?php foreach ($tags as $tag): ?>
                                             <li>
@@ -96,7 +97,8 @@ $pricing_options = get_terms(array(
                             <div class="filter-list" id="pricingList">
                                 <?php
                                 $pricing_options = get_terms(array('taxonomy' => 'ai-tool-pricing-option', 'hide_empty' => false));
-                                if (!empty($pricing_options) && !is_wp_error($pricing_options)): ?>
+                                if (!empty($pricing_options) && !is_wp_error($pricing_options)):
+                                    ?>
                                     <ul class="space-y-2">
                                         <?php foreach ($pricing_options as $option): ?>
                                             <li>
@@ -125,57 +127,57 @@ $pricing_options = get_terms(array(
 			<div class="w-full lg:w-3/4">
 				<div id="results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 					<?php
-					// Get current page
-					$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+                    // Get current page
+                    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
-					// Setup the query args
-					$query_args = array(
-						'post_type' => 'ai-tool',
-						'posts_per_page' => 12,
-						'paged' => $paged,
-					);
+                    // Setup the query args
+                    $query_args = array(
+                        'post_type' => 'ai-tool',
+                        'posts_per_page' => 12,
+                        'paged' => $paged,
+                    );
 
-					// Handle category filter
-					if (!empty($_GET['category'])) {
-						$query_args['tax_query'][] = array(
-							'taxonomy' => 'ai-tool-category',
-							'field' => 'slug',
-							'terms' => sanitize_text_field($_GET['category']),
-						);
-					}
+                    // Handle category filter
+                    if (!empty($_GET['category'])) {
+                        $query_args['tax_query'][] = array(
+                            'taxonomy' => 'ai-tool-category',
+                            'field' => 'slug',
+                            'terms' => sanitize_text_field($_GET['category']),
+                        );
+                    }
 
-					// Handle features filter
-					if (!empty($_GET['features'])) {
-						$features = is_array($_GET['features']) ? $_GET['features'] : array($_GET['features']);
-						$query_args['tax_query'][] = array(
-							'taxonomy' => 'ai-tool-tag',
-							'field' => 'slug',
-							'terms' => array_map('sanitize_text_field', $features),
-						);
-					}
+                    // Handle features filter
+                    if (!empty($_GET['features'])) {
+                        $features = is_array($_GET['features']) ? $_GET['features'] : array($_GET['features']);
+                        $query_args['tax_query'][] = array(
+                            'taxonomy' => 'ai-tool-tag',
+                            'field' => 'slug',
+                            'terms' => array_map('sanitize_text_field', $features),
+                        );
+                    }
 
-					// Handle pricing filter
-					if (!empty($_GET['pricing'])) {
-						$pricing = is_array($_GET['pricing']) ? $_GET['pricing'] : array($_GET['pricing']);
-						$query_args['tax_query'][] = array(
-							'taxonomy' => 'ai-tool-pricing-option',
-							'field' => 'slug',
-							'terms' => array_map('sanitize_text_field', $pricing),
-						);
-					}
+                    // Handle pricing filter
+                    if (!empty($_GET['pricing'])) {
+                        $pricing = is_array($_GET['pricing']) ? $_GET['pricing'] : array($_GET['pricing']);
+                        $query_args['tax_query'][] = array(
+                            'taxonomy' => 'ai-tool-pricing-option',
+                            'field' => 'slug',
+                            'terms' => array_map('sanitize_text_field', $pricing),
+                        );
+                    }
 
-					// Set relation for tax queries if we have multiple
-					if (isset($query_args['tax_query']) && count($query_args['tax_query']) > 1) {
-						$query_args['tax_query']['relation'] = 'AND';
-					}
+                    // Set relation for tax queries if we have multiple
+                    if (isset($query_args['tax_query']) && count($query_args['tax_query']) > 1) {
+                        $query_args['tax_query']['relation'] = 'AND';
+                    }
 
-					// Create a new query
-					$custom_query = new WP_Query($query_args);
+                    // Create a new query
+                    $custom_query = new WP_Query($query_args);
 
-					if ($custom_query->have_posts()):
-						while ($custom_query->have_posts()):
-							$custom_query->the_post();
-							?>
+                    if ($custom_query->have_posts()):
+                        while ($custom_query->have_posts()):
+                            $custom_query->the_post();
+                            ?>
 							<a href="<?php the_permalink(); ?>" class="no-d-hover block bg-[#B3C5FF1A] p-6 rounded-xl h-full flex flex-col border border-[var(--primary)]">
 								<div class="flex flex-col flex-1 w-full gap-3">
 									<?php if (has_post_thumbnail()): ?>
@@ -188,30 +190,30 @@ $pricing_options = get_terms(array(
 								</div>
 							</a>
 						<?php
-						endwhile;
+                        endwhile;
 
-						// Pagination
-						$pagination = paginate_links(array(
-							'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
-							'format' => '?paged=%#%',
-							'current' => max(1, $paged),
-							'total' => $custom_query->max_num_pages,
-							'prev_text' => '&laquo;',
-							'next_text' => '&raquo;',
-							'type' => 'array',
-						));
+                        // Pagination
+                        $pagination = paginate_links(array(
+                            'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
+                            'format' => '?paged=%#%',
+                            'current' => max(1, $paged),
+                            'total' => $custom_query->max_num_pages,
+                            'prev_text' => '&laquo;',
+                            'next_text' => '&raquo;',
+                            'type' => 'array',
+                        ));
 
-						if ($pagination):
-							echo '<div class="mt-8 w-full"><ul class="flex flex-wrap justify-center gap-2">';
-							foreach ($pagination as $page_link) {
-								echo '<li>' . str_replace('page-numbers', 'px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700', $page_link) . '</li>';
-							}
-							echo '</ul></div>';
-						endif;
+                        if ($pagination):
+                            echo '<div class="mt-8 w-full"><ul class="flex flex-wrap justify-center gap-2">';
+                            foreach ($pagination as $page_link) {
+                                echo '<li>' . str_replace('page-numbers', 'px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700', $page_link) . '</li>';
+                            }
+                            echo '</ul></div>';
+                        endif;
 
-						wp_reset_postdata();
-					else:
-						?>
+                        wp_reset_postdata();
+                    else:
+                        ?>
 						<p class="text-center w-full col-span-3"><?php _e('No tools found.', 'wb'); ?></p>
 					<?php endif; ?>
 				</div>

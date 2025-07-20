@@ -16,7 +16,7 @@ $pricing_options = get_terms(array(
 ?>
 
 <style>
-    .category-button.active-btn {
+    .active-btn {
         border-color: var(--primary);
         color: #fff;
         background-color: var(--primary);
@@ -43,7 +43,7 @@ $pricing_options = get_terms(array(
     foreach ($categories as $category):
         $is_active = $current_cat === $category->slug ? 'active-btn text-white' : '';
         ?>
-        <button class="ai-agents-category-button capitalize text-black bg-transparent px-4 py-2 rounded-lg m-1 border-[3px] <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
+        <button class="ai-agents-category-button capitalize text-black bg-[#94a9ff] px-4 py-2 rounded-lg m-1 border-[3px] <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
             <?php echo $category->name; ?>
         </button>
     <?php endforeach; ?>
@@ -77,7 +77,8 @@ $pricing_options = get_terms(array(
                             <div class="filter-list" id="featuresList">
                                 <?php
                                 $tags = get_terms(array('taxonomy' => 'ai-agent-tag', 'hide_empty' => false));
-                                if (!empty($tags) && !is_wp_error($tags)): ?>
+                                if (!empty($tags) && !is_wp_error($tags)):
+                                    ?>
                                     <ul class="space-y-2">
                                         <?php foreach ($tags as $tag): ?>
                                             <li>
@@ -103,7 +104,8 @@ $pricing_options = get_terms(array(
                             <div class="filter-list" id="pricingList">
                                 <?php
                                 $pricing_options = get_terms(array('taxonomy' => 'ai-agent-pricing-option', 'hide_empty' => false));
-                                if (!empty($pricing_options) && !is_wp_error($pricing_options)): ?>
+                                if (!empty($pricing_options) && !is_wp_error($pricing_options)):
+                                    ?>
                                     <ul class="space-y-2">
                                         <?php foreach ($pricing_options as $option): ?>
                                             <li>
