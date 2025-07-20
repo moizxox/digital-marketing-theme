@@ -663,7 +663,7 @@ if (!defined('UPLOAD_ERR_OK')) {
 
 // Define E_ALL if not defined
 if (!defined('E_ALL')) {
-    define('E_ALL', 32767); // All errors and warnings
+    define('E_ALL', 32767);  // All errors and warnings
 }
 
 // Ensure Exception class is available
@@ -671,7 +671,8 @@ if (!class_exists('Exception', false)) {
     if (class_exists('\Exception')) {
         class Exception extends \Exception {}
     } else {
-        class Exception {
+        class Exception
+        {
             protected $message = 'Unknown exception';
             private $string;
             protected $code = 0;
@@ -680,45 +681,55 @@ if (!class_exists('Exception', false)) {
             private $trace;
             private $previous;
 
-            public function __construct($message = "", $code = 0, Exception $previous = null) {
+            public function __construct($message = '', $code = 0, Exception $previous = null)
+            {
                 $this->message = $message;
                 $this->code = $code;
                 $this->previous = $previous;
             }
 
-            public function __wakeup() {
+            public function __wakeup()
+            {
                 // Restore the object state
             }
 
-            public function getMessage() {
+            public function getMessage()
+            {
                 return $this->message;
             }
 
-            public function getCode() {
+            public function getCode()
+            {
                 return $this->code;
             }
 
-            public function getFile() {
+            public function getFile()
+            {
                 return $this->file;
             }
 
-            public function getLine() {
+            public function getLine()
+            {
                 return $this->line;
             }
 
-            public function getTrace() {
+            public function getTrace()
+            {
                 return $this->trace;
             }
 
-            public function getPrevious() {
+            public function getPrevious()
+            {
                 return $this->previous;
             }
 
-            public function getTraceAsString() {
+            public function getTraceAsString()
+            {
                 return '';
             }
 
-            public function __toString() {
+            public function __toString()
+            {
                 return get_class($this) . " '{$this->message}' in {$this->file}({$this->line})\n" . $this->getTraceAsString();
             }
         }
@@ -734,8 +745,8 @@ if (!isset($GLOBALS['_POST'])) {
 }
 
 // Alias for backward compatibility
-$_FILES =& $GLOBALS['_FILES'];
-$_POST =& $GLOBALS['_POST'];
+$_FILES = &$GLOBALS['_FILES'];
+$_POST = &$GLOBALS['_POST'];
 
 // Add CSV Import Menu
 function add_ai_tool_csv_import_menu()
@@ -753,60 +764,62 @@ function add_ai_tool_csv_import_menu()
 add_action('admin_menu', 'add_ai_tool_csv_import_menu');
 
 // Enqueue scripts for the import page
-function enqueue_ai_tools_import_scripts($hook) {
+function enqueue_ai_tools_import_scripts($hook)
+{
     if ('ai-tool_page_ai-tool-csv-import' !== $hook) {
         return;
     }
-    
-    wp_enqueue_script('ai-tools-import', 
-        get_template_directory_uri() . '/js/ai-tools-import.js', 
-        array('jquery'), 
-        filemtime(get_template_directory() . '/js/ai-tools-import.js'), 
-        true
-    );
-    
+
+    wp_enqueue_script('ai-tools-import',
+        get_template_directory_uri() . '/js/ai-tools-import.js',
+        array('jquery'),
+        filemtime(get_template_directory() . '/js/ai-tools-import.js'),
+        true);
+
     wp_localize_script('ai-tools-import', 'aiToolsImport', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('ai_tools_import_nonce')
     ));
-    
-    wp_enqueue_style('ai-tools-import', 
-        get_template_directory_uri() . '/css/ai-tools-import.css', 
-        array(), 
-        filemtime(get_template_directory() . '/css/ai-tools-import.css')
-    );
+
+    wp_enqueue_style('ai-tools-import',
+        get_template_directory_uri() . '/css/ai-tools-import.css',
+        array(),
+        filemtime(get_template_directory() . '/css/ai-tools-import.css'));
 }
+
 add_action('admin_enqueue_scripts', 'enqueue_ai_tools_import_scripts');
 
 // AJAX handler to start the import process
 add_action('wp_ajax_start_ai_tools_import', 'handle_start_ai_tools_import');
-function handle_start_ai_tools_import() {
+
+function handle_start_ai_tools_import()
+{
     // Verify nonce and permissions
     if (!check_ajax_referer('ai_tools_import_nonce', 'nonce', false)) {
         wp_send_json_error('Invalid nonce');
     }
-    
+
     if (!current_user_can('manage_options')) {
         wp_send_json_error('Insufficient permissions');
     }
-    
+
     // Get the uploaded file
     if (empty($_FILES['file'])) {
         wp_send_json_error('No file uploaded');
     }
-    
+
     $file = $_FILES['file'];
-    
+
     // Check for upload errors
     if ($file['error'] !== UPLOAD_ERR_OK) {
         wp_send_json_error('File upload error: ' . $file['error']);
     }
-    
+
     // Parse the CSV into chunks
     $csv_data = array_map('str_getcsv', file($file['tmp_name']));
     $header = array_shift($csv_data);
-    $chunks = array_chunk($csv_data, 50); // 50 rows per chunk
-    
+    $chunks = array_chunk($csv_data, 50);  // 50 rows per chunk
+
     // Store chunks in a transient (expires in 1 hour)
     $import_id = 'ai_tools_import_' . time();
     set_transient($import_id, array(
@@ -816,7 +829,7 @@ function handle_start_ai_tools_import() {
         'header' => $header,
         'errors' => array()
     ), HOUR_IN_SECONDS);
-    
+
     wp_send_json_success(array(
         'import_id' => $import_id,
         'total_chunks' => count($chunks),
@@ -826,34 +839,36 @@ function handle_start_ai_tools_import() {
 
 // AJAX handler to process a single chunk
 add_action('wp_ajax_process_ai_tools_chunk', 'handle_process_ai_tools_chunk');
-function handle_process_ai_tools_chunk() {
+
+function handle_process_ai_tools_chunk()
+{
     // Verify nonce and permissions
     if (!check_ajax_referer('ai_tools_import_nonce', 'nonce', false)) {
         wp_send_json_error('Invalid nonce');
     }
-    
+
     if (!current_user_can('manage_options')) {
         wp_send_json_error('Insufficient permissions');
     }
-    
+
     $import_id = sanitize_text_field($_POST['import_id']);
     $chunk_index = intval($_POST['chunk_index']);
-    
+
     // Get the import data
     $import_data = get_transient($import_id);
     if (empty($import_data)) {
         wp_send_json_error('Import session expired or invalid');
     }
-    
+
     // Process the current chunk
     $chunk = $import_data['chunks'][$chunk_index];
     $results = process_ai_tools_chunk($chunk, $import_data['header']);
-    
+
     // Update import progress
     $import_data['processed'] += count($chunk);
     $import_data['errors'] = array_merge($import_data['errors'], $results['errors']);
     set_transient($import_id, $import_data, HOUR_IN_SECONDS);
-    
+
     wp_send_json_success(array(
         'processed' => $import_data['processed'],
         'total' => $import_data['total'],
@@ -864,73 +879,74 @@ function handle_process_ai_tools_chunk() {
 }
 
 // Process a single chunk of CSV data
-function process_ai_tools_chunk($rows, $header) {
+function process_ai_tools_chunk($rows, $header)
+{
     // Ensure we have the required WordPress functions
     if (!function_exists('wp_handle_upload')) {
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once (ABSPATH . 'wp-admin/includes/file.php');
     }
-    
+
     if (!function_exists('wp_generate_attachment_metadata')) {
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        require_once (ABSPATH . 'wp-admin/includes/image.php');
     }
-    
+
     if (!function_exists('media_handle_upload')) {
-        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        require_once (ABSPATH . 'wp-admin/includes/media.php');
     }
     $errors = array();
     $imported = 0;
-    
+
     // Ensure required WordPress files are included
-    require_once(ABSPATH . 'wp-admin/includes/image.php');
-    require_once(ABSPATH . 'wp-admin/includes/file.php');
-    require_once(ABSPATH . 'wp-admin/includes/media.php');
-    
+    require_once (ABSPATH . 'wp-admin/includes/image.php');
+    require_once (ABSPATH . 'wp-admin/includes/file.php');
+    require_once (ABSPATH . 'wp-admin/includes/media.php');
+
     foreach ($rows as $row) {
         if (count($row) !== count($header)) {
-            $errors[] = "Skipping malformed row: " . implode(',', array_slice($row, 0, 5)) . (count($row) > 5 ? '...' : '');
+            $errors[] = 'Skipping malformed row: ' . implode(',', array_slice($row, 0, 5)) . (count($row) > 5 ? '...' : '');
             continue;
         }
-        
+
         $data = array_combine($header, $row);
-        
+
         // Skip empty rows
         if (empty($data['title']) || empty($data['description'])) {
-            $errors[] = "Skipping row: Missing required fields (title or description)";
+            $errors[] = 'Skipping row: Missing required fields (title or description)';
             continue;
         }
-        
+
         try {
             // Prepare post data
             $post_data = array(
-                'post_title'   => sanitize_text_field($data['title']),
+                'post_title' => sanitize_text_field($data['title']),
                 'post_content' => wp_kses_post($data['description']),
-                'post_status'  => 'publish',
-                'post_type'    => 'ai-tool',
+                'post_status' => 'publish',
+                'post_type' => 'ai-tool',
                 'post_excerpt' => !empty($data['tagline']) ? sanitize_text_field($data['tagline']) : ''
             );
-            
+
             // Insert the post
             // Ensure we have the required WordPress functions
             if (!function_exists('wp_insert_post')) {
-                require_once(ABSPATH . 'wp-includes/post.php');
+                require_once (ABSPATH . 'wp-includes/post.php');
             }
-            
+
             $post_id = wp_insert_post($post_data, true);
-            
+
             if (is_wp_error($post_id)) {
                 throw new Exception($post_id->get_error_message());
             }
-            
+
             // Ensure we have the required WordPress functions
             if (!function_exists('term_exists') || !function_exists('wp_set_object_terms')) {
-                require_once(ABSPATH . 'wp-includes/taxonomy.php');
+                require_once (ABSPATH . 'wp-includes/taxonomy.php');
             }
-            
+
             // Handle categories
             if (!empty($data['label'])) {
                 $categories = array_map('trim', explode(',', $data['label']));
                 $category_terms = array();
-                
+
                 foreach ($categories as $category) {
                     if (!empty($category)) {
                         $term = term_exists($category, 'ai-tool-category');
@@ -942,12 +958,12 @@ function process_ai_tools_chunk($rows, $header) {
                         }
                     }
                 }
-                
+
                 if (!empty($category_terms)) {
                     wp_set_object_terms($post_id, $category_terms, 'ai-tool-category');
                 }
             }
-            
+
             // Handle features as tags
             if (!empty($data['Features'])) {
                 $features = array_map('trim', explode(',', $data['Features']));
@@ -956,12 +972,12 @@ function process_ai_tools_chunk($rows, $header) {
                     wp_set_object_terms($post_id, $features, 'ai-tool-tag');
                 }
             }
-            
+
             // Handle pricing options
             if (!empty($data['pricing model'])) {
                 $pricing_options = array_map('trim', explode(',', $data['pricing model']));
                 $pricing_terms = array();
-                
+
                 foreach ($pricing_options as $option) {
                     if (!empty($option)) {
                         $term = term_exists($option, 'ai-tool-pricing-option');
@@ -973,105 +989,104 @@ function process_ai_tools_chunk($rows, $header) {
                         }
                     }
                 }
-                
+
                 if (!empty($pricing_terms)) {
                     wp_set_object_terms($post_id, $pricing_terms, 'ai-tool-pricing-option');
                 }
             }
-            
+
             // Ensure we have the required WordPress functions
             if (!function_exists('update_post_meta')) {
-                require_once(ABSPATH . 'wp-includes/post.php');
+                require_once (ABSPATH . 'wp-includes/post.php');
             }
-            
+
             // Set meta fields
             if (!empty($data['web url'])) {
                 update_post_meta($post_id, '_website_url', esc_url_raw($data['web url']));
             }
-            
+
             if (!empty($data['option price'])) {
                 update_post_meta($post_id, '_amount', sanitize_text_field($data['option price']));
             }
-            
+
             if (!empty($data['currency'])) {
                 update_post_meta($post_id, '_currency', sanitize_text_field($data['currency']));
             }
-            
+
             // Handle logo image
             if (!empty($data['logo'])) {
                 $logo_url = esc_url_raw($data['logo']);
                 $logo_id = 0;
-                
+
                 // Try to get attachment ID by URL first
                 if (function_exists('attachment_url_to_postid')) {
                     $logo_id = attachment_url_to_postid($logo_url);
                 }
-                
+
                 // If not found, try to sideload the image
                 if (!$logo_id) {
                     $file_array = array();
                     $file_array['name'] = basename($logo_url);
-                    
+
                     // Download file to temp location
                     $file_array['tmp_name'] = download_url($logo_url);
-                    
+
                     if (!is_wp_error($file_array['tmp_name'])) {
                         // Handle the upload
                         $logo_id = media_handle_sideload($file_array, $post_id, $data['title']);
-                        
+
                         // Delete temp file
                         @unlink($file_array['tmp_name']);
                     }
                 }
-                
+
                 if (!is_wp_error($logo_id)) {
                     update_post_meta($post_id, '_logo', wp_get_attachment_url($logo_id));
                 } else {
                     $errors[] = "Failed to import logo for '{$data['title']}': " . $logo_id->get_error_message();
                 }
             }
-            
+
             // Handle featured image
             if (!empty($data['image'])) {
                 $image_url = esc_url_raw($data['image']);
                 $image_id = 0;
-                
+
                 // Try to get attachment ID by URL first
                 if (function_exists('attachment_url_to_postid')) {
                     $image_id = attachment_url_to_postid($image_url);
                 }
-                
+
                 // If not found, try to sideload the image
                 if (!$image_id) {
                     $file_array = array();
                     $file_array['name'] = basename($image_url);
-                    
+
                     // Download file to temp location
                     $file_array['tmp_name'] = download_url($image_url);
-                    
+
                     if (!is_wp_error($file_array['tmp_name'])) {
                         // Handle the upload
                         $image_id = media_handle_sideload($file_array, $post_id, $data['title']);
-                        
+
                         // Delete temp file
                         @unlink($file_array['tmp_name']);
                     }
                 }
-                
+
                 if (!is_wp_error($image_id)) {
                     set_post_thumbnail($post_id, $image_id);
                 } else {
                     $errors[] = "Failed to import featured image for '{$data['title']}': " . $image_id->get_error_message();
                 }
             }
-            
+
             $imported++;
-            
         } catch (Exception $e) {
             $errors[] = "Error processing '{$data['title']}': " . $e->getMessage();
         }
     }
-    
+
     return array(
         'imported' => $imported,
         'errors' => $errors
@@ -1101,16 +1116,17 @@ function wb_get_attachment_id_by_filename($filename)
     return $attachment ? (int) $attachment : 0;
 }
 
-function ai_tool_csv_import_page() {
+function ai_tool_csv_import_page()
+{
     // Increase execution time and memory limit for large imports
     @set_time_limit(0);
     @ini_set('memory_limit', '512M');
-    
+
     // Ensure we have the required WordPress functions
     if (!function_exists('wp_max_upload_size')) {
-        require_once(ABSPATH . 'wp-includes/formatting.php');
+        require_once (ABSPATH . 'wp-includes/formatting.php');
     }
-    
+
     // Add error reporting for debugging
     if (defined('WP_DEBUG') && WP_DEBUG) {
         error_reporting(E_ALL);
@@ -1328,7 +1344,8 @@ function ai_tool_csv_import_page() {
 }
 
 // Add CSV Import Menu for AI Agents
-function add_ai_agent_csv_import_menu() {
+function add_ai_agent_csv_import_menu()
+{
     add_submenu_page(
         'edit.php?post_type=ai-agent',
         'Import AI Agents from CSV',
@@ -1342,60 +1359,62 @@ function add_ai_agent_csv_import_menu() {
 add_action('admin_menu', 'add_ai_agent_csv_import_menu');
 
 // Enqueue scripts for the AI Agents import page
-function enqueue_ai_agents_import_scripts($hook) {
+function enqueue_ai_agents_import_scripts($hook)
+{
     if ('ai-agent_page_ai-agent-csv-import' !== $hook) {
         return;
     }
-    
-    wp_enqueue_script('ai-agents-import', 
-        get_template_directory_uri() . '/js/ai-agents-import.js', 
-        array('jquery'), 
-        filemtime(get_template_directory() . '/js/ai-agents-import.js'), 
-        true
-    );
-    
+
+    wp_enqueue_script('ai-agents-import',
+        get_template_directory_uri() . '/js/ai-agents-import.js',
+        array('jquery'),
+        filemtime(get_template_directory() . '/js/ai-agents-import.js'),
+        true);
+
     wp_localize_script('ai-agents-import', 'aiAgentsImport', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('ai_agents_import_nonce')
     ));
-    
-    wp_enqueue_style('ai-agents-import', 
-        get_template_directory_uri() . '/css/ai-agents-import.css', 
-        array(), 
-        filemtime(get_template_directory() . '/css/ai-agents-import.css')
-    );
+
+    wp_enqueue_style('ai-agents-import',
+        get_template_directory_uri() . '/css/ai-agents-import.css',
+        array(),
+        filemtime(get_template_directory() . '/css/ai-agents-import.css'));
 }
+
 add_action('admin_enqueue_scripts', 'enqueue_ai_agents_import_scripts');
 
 // AJAX handler to start the AI Agents import process
 add_action('wp_ajax_start_ai_agents_import', 'handle_start_ai_agents_import');
-function handle_start_ai_agents_import() {
+
+function handle_start_ai_agents_import()
+{
     // Verify nonce and permissions
     if (!check_ajax_referer('ai_agents_import_nonce', 'nonce', false)) {
         wp_send_json_error('Invalid nonce');
     }
-    
+
     if (!current_user_can('manage_options')) {
         wp_send_json_error('Insufficient permissions');
     }
-    
+
     // Get the uploaded file
     if (empty($_FILES['file'])) {
         wp_send_json_error('No file uploaded');
     }
-    
+
     $file = $_FILES['file'];
-    
+
     // Check for upload errors
     if ($file['error'] !== UPLOAD_ERR_OK) {
         wp_send_json_error('File upload error: ' . $file['error']);
     }
-    
+
     // Parse the CSV into chunks
     $csv_data = array_map('str_getcsv', file($file['tmp_name']));
     $header = array_shift($csv_data);
-    $chunks = array_chunk($csv_data, 50); // 50 rows per chunk
-    
+    $chunks = array_chunk($csv_data, 50);  // 50 rows per chunk
+
     // Store chunks in a transient (expires in 1 hour)
     $import_id = 'ai_agents_import_' . time();
     set_transient($import_id, array(
@@ -1405,7 +1424,7 @@ function handle_start_ai_agents_import() {
         'header' => $header,
         'errors' => array()
     ), HOUR_IN_SECONDS);
-    
+
     wp_send_json_success(array(
         'import_id' => $import_id,
         'total_chunks' => count($chunks),
@@ -1415,34 +1434,36 @@ function handle_start_ai_agents_import() {
 
 // AJAX handler to process a single chunk of AI Agents
 add_action('wp_ajax_process_ai_agents_chunk', 'handle_process_ai_agents_chunk');
-function handle_process_ai_agents_chunk() {
+
+function handle_process_ai_agents_chunk()
+{
     // Verify nonce and permissions
     if (!check_ajax_referer('ai_agents_import_nonce', 'nonce', false)) {
         wp_send_json_error('Invalid nonce');
     }
-    
+
     if (!current_user_can('manage_options')) {
         wp_send_json_error('Insufficient permissions');
     }
-    
+
     $import_id = sanitize_text_field($_POST['import_id']);
     $chunk_index = intval($_POST['chunk_index']);
-    
+
     // Get the import data
     $import_data = get_transient($import_id);
     if (empty($import_data)) {
         wp_send_json_error('Import session expired or invalid');
     }
-    
+
     // Process the current chunk
     $chunk = $import_data['chunks'][$chunk_index];
     $results = process_ai_agents_chunk($chunk, $import_data['header']);
-    
+
     // Update import progress
     $import_data['processed'] += count($chunk);
     $import_data['errors'] = array_merge($import_data['errors'], $results['errors']);
     set_transient($import_id, $import_data, HOUR_IN_SECONDS);
-    
+
     wp_send_json_success(array(
         'processed' => $import_data['processed'],
         'total' => $import_data['total'],
@@ -1453,59 +1474,60 @@ function handle_process_ai_agents_chunk() {
 }
 
 // Process a single chunk of AI Agents CSV data
-function process_ai_agents_chunk($rows, $header) {
+function process_ai_agents_chunk($rows, $header)
+{
     // Ensure we have the required WordPress functions
     if (!function_exists('wp_handle_upload')) {
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once (ABSPATH . 'wp-admin/includes/file.php');
     }
-    
+
     if (!function_exists('wp_generate_attachment_metadata')) {
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        require_once (ABSPATH . 'wp-admin/includes/image.php');
     }
-    
+
     if (!function_exists('media_handle_upload')) {
-        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        require_once (ABSPATH . 'wp-admin/includes/media.php');
     }
-    
+
     $errors = array();
     $imported = 0;
-    
+
     foreach ($rows as $row) {
         if (count($row) !== count($header)) {
-            $errors[] = "Skipping malformed row: " . implode(',', array_slice($row, 0, 5)) . (count($row) > 5 ? '...' : '');
+            $errors[] = 'Skipping malformed row: ' . implode(',', array_slice($row, 0, 5)) . (count($row) > 5 ? '...' : '');
             continue;
         }
-        
+
         $data = array_combine($header, $row);
-        
+
         // Skip empty rows
         if (empty($data['title']) || empty($data['description'])) {
-            $errors[] = "Skipping row: Missing required fields (title or description)";
+            $errors[] = 'Skipping row: Missing required fields (title or description)';
             continue;
         }
-        
+
         try {
             // Prepare post data
             $post_data = array(
-                'post_title'   => sanitize_text_field($data['title']),
+                'post_title' => sanitize_text_field($data['title']),
                 'post_content' => wp_kses_post($data['description']),
-                'post_status'  => 'publish',
-                'post_type'    => 'ai-agent',
+                'post_status' => 'publish',
+                'post_type' => 'ai-agent',
                 'post_excerpt' => !empty($data['tagline']) ? sanitize_text_field($data['tagline']) : ''
             );
-            
+
             // Insert the post
             $post_id = wp_insert_post($post_data, true);
-            
+
             if (is_wp_error($post_id)) {
                 throw new Exception($post_id->get_error_message());
             }
-            
+
             // Handle categories
             if (!empty($data['label'])) {
                 $categories = array_map('trim', explode(',', $data['label']));
                 $category_terms = array();
-                
+
                 foreach ($categories as $category) {
                     if (!empty($category)) {
                         $term = term_exists($category, 'ai-agent-category');
@@ -1517,12 +1539,12 @@ function process_ai_agents_chunk($rows, $header) {
                         }
                     }
                 }
-                
+
                 if (!empty($category_terms)) {
                     wp_set_object_terms($post_id, $category_terms, 'ai-agent-category');
                 }
             }
-            
+
             // Handle features as tags
             if (!empty($data['Features'])) {
                 $features = array_map('trim', explode(',', $data['Features']));
@@ -1531,12 +1553,12 @@ function process_ai_agents_chunk($rows, $header) {
                     wp_set_object_terms($post_id, $features, 'ai-agent-tag');
                 }
             }
-            
+
             // Handle pricing options
             if (!empty($data['pricing model'])) {
                 $pricing_options = array_map('trim', explode(',', $data['pricing model']));
                 $pricing_terms = array();
-                
+
                 foreach ($pricing_options as $option) {
                     if (!empty($option)) {
                         $term = term_exists($option, 'ai-agent-pricing-option');
@@ -1548,100 +1570,99 @@ function process_ai_agents_chunk($rows, $header) {
                         }
                     }
                 }
-                
+
                 if (!empty($pricing_terms)) {
                     wp_set_object_terms($post_id, $pricing_terms, 'ai-agent-pricing-option');
                 }
             }
-            
+
             // Set meta fields
             if (!empty($data['web url'])) {
                 update_post_meta($post_id, '_website_url', esc_url_raw($data['web url']));
             }
-            
+
             if (!empty($data['option price'])) {
                 update_post_meta($post_id, '_amount', sanitize_text_field($data['option price']));
             }
-            
+
             if (!empty($data['currency'])) {
                 update_post_meta($post_id, '_currency', sanitize_text_field($data['currency']));
             }
-            
+
             // Handle logo image
             if (!empty($data['logo'])) {
                 $logo_url = esc_url_raw($data['logo']);
                 $logo_id = 0;
-                
+
                 // Try to get attachment ID by URL first
                 if (function_exists('attachment_url_to_postid')) {
                     $logo_id = attachment_url_to_postid($logo_url);
                 }
-                
+
                 // If not found, try to sideload the image
                 if (!$logo_id) {
                     $file_array = array();
                     $file_array['name'] = basename($logo_url);
-                    
+
                     // Download file to temp location
                     $file_array['tmp_name'] = download_url($logo_url);
-                    
+
                     if (!is_wp_error($file_array['tmp_name'])) {
                         // Handle the upload
                         $logo_id = media_handle_sideload($file_array, $post_id, $data['title']);
-                        
+
                         // Delete temp file
                         @unlink($file_array['tmp_name']);
                     }
                 }
-                
+
                 if (!is_wp_error($logo_id)) {
                     update_post_meta($post_id, '_logo', wp_get_attachment_url($logo_id));
                 } else {
                     $errors[] = "Failed to import logo for '{$data['title']}': " . $logo_id->get_error_message();
                 }
             }
-            
+
             // Handle featured image
             if (!empty($data['image'])) {
                 $image_url = esc_url_raw($data['image']);
                 $image_id = 0;
-                
+
                 // Try to get attachment ID by URL first
                 if (function_exists('attachment_url_to_postid')) {
                     $image_id = attachment_url_to_postid($image_url);
                 }
-                
+
                 // If not found, try to sideload the image
                 if (!$image_id) {
                     $file_array = array();
                     $file_array['name'] = basename($image_url);
-                    
+
                     // Download file to temp location
                     $file_array['tmp_name'] = download_url($image_url);
-                    
+
                     if (!is_wp_error($file_array['tmp_name'])) {
                         // Handle the upload
                         $image_id = media_handle_sideload($file_array, $post_id, $data['title']);
-                        
+
                         // Delete temp file
                         @unlink($file_array['tmp_name']);
                     }
                 }
-                
+
                 if (!is_wp_error($image_id)) {
                     set_post_thumbnail($post_id, $image_id);
                 } else {
                     $errors[] = "Failed to import featured image for '{$data['title']}': " . $image_id->get_error_message();
                 }
             }
-            
+
             $imported++;
-            
         } catch (Exception $e) {
             $errors[] = "Error processing '{$data['title']}': " . $e->getMessage();
         }
     }
-    
+
     return array(
         'imported' => $imported,
         'errors' => $errors
@@ -1649,16 +1670,17 @@ function process_ai_agents_chunk($rows, $header) {
 }
 
 // CSV Import Page Content for AI Agents
-function ai_agent_csv_import_page() {
+function ai_agent_csv_import_page()
+{
     // Increase execution time and memory limit for large imports
     @set_time_limit(0);
     @ini_set('memory_limit', '512M');
-    
+
     // Ensure we have the required WordPress functions
     if (!function_exists('wp_max_upload_size')) {
-        require_once(ABSPATH . 'wp-includes/formatting.php');
+        require_once (ABSPATH . 'wp-includes/formatting.php');
     }
-    
+
     // Add error reporting for debugging
     if (defined('WP_DEBUG') && WP_DEBUG) {
         error_reporting(E_ALL);
@@ -2124,4 +2146,48 @@ class Custom_Nav_Walker extends Walker_Nav_Menu
         $indent = str_repeat("\t", $depth);
         $output .= "$indent</ul>\n";
     }
+}
+
+add_action('wp_ajax_submit_ai_tool', 'handle_ai_tool_submission');
+add_action('wp_ajax_nopriv_submit_ai_tool', 'handle_ai_tool_submission');
+
+function handle_ai_tool_submission()
+{
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'submit_ai_tool_nonce')) {
+        wp_send_json_error(['message' => 'Security check failed']);
+    }
+
+    $tool_name = sanitize_text_field($_POST['tool_name']);
+    $email = sanitize_email($_POST['email']);
+    $website_url = esc_url_raw($_POST['website_url']);
+    $category = sanitize_text_field($_POST['category']);
+    $other_category = sanitize_text_field($_POST['other_category']);
+    $pricing_model = sanitize_text_field($_POST['pricing_model']);
+    $package_type = sanitize_text_field($_POST['package_type_select']);
+    $short_desc = sanitize_textarea_field($_POST['short_description']);
+    $full_desc = sanitize_textarea_field($_POST['full_description']);
+    $features = isset($_POST['features']) ? array_map('sanitize_text_field', $_POST['features']) : [];
+
+    $all_features = implode(', ', $features);
+    $admin_email = get_option('admin_email');
+
+    $subject = "New AI Tool Submission: $tool_name";
+    $message = "A new tool has been submitted.\n\n"
+        . "Tool Name: $tool_name\n"
+        . "Email: $email\n"
+        . "Website: $website_url\n"
+        . "Category: $category\n"
+        . "Other Category: $other_category\n"
+        . "Pricing Model: $pricing_model\n"
+        . "Package Type: $package_type\n"
+        . "Short Description: $short_desc\n"
+        . "Full Description: $full_desc\n"
+        . "Features: $all_features";
+
+    $headers = ['Content-Type: text/plain; charset=UTF-8'];
+
+    wp_mail($admin_email, $subject, $message, $headers);
+    wp_mail($email, 'Thank you for submitting your AI tool', "Dear user,\n\nWe received your submission for '$tool_name'. We’ll review it shortly.\n\nThanks!", $headers);
+
+    wp_send_json_success(['message' => 'Form submitted and emails sent']);
 }

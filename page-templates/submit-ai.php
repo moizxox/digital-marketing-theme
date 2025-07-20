@@ -45,7 +45,7 @@ get_header();
               class="border border-[#e0e0e0] flex flex-col gap-2 rounded-lg h-[305px] bg-white shadow-md p-[32px] transition-all duration-300 transform hover:-translate-y-2 hover:shadow-lg"
             >
               <h3 class="text-[var(--primary)] text-[1.8rem] font-semibold">Basic Submission</h3>
-              <p class="text-[1.4rem] text-[#333333]">$44.99 / one-time payment</p>
+              <p class="text-[1.4rem] text-[#333333]">$49.99 / one-time payment</p>
               <ul class="flex flex-col gap-1">
                 <li class="text-[#28a745] flex items-center gap-2">
                   <i class="fa-solid fa-circle-check"></i>
@@ -63,7 +63,8 @@ get_header();
               <div>
                 <a
                   href="#"
-                  class="bg-[var(--primary)] relative rounded-md text-base top-[20px] text-white px-[24px] py-[12px]"
+                  class="bg-[var(--primary)] relative rounded-md text-base top-[20px] text-white px-[24px] py-[12px] submit-tool-btn"
+                  data-package-type="basic"
                   >Submit Tool</a
                 >
               </div>
@@ -72,7 +73,7 @@ get_header();
               class="border border-[#e0e0e0] flex flex-col gap-2 rounded-lg h-[305px] bg-white shadow-md p-[32px] transition-all duration-300 transform hover:-translate-y-2 hover:shadow-lg"
             >
               <h3 class="text-[var(--primary)] text-[1.8rem] font-semibold">Featured Package</h3>
-              <p class="text-[1.4rem] text-[#333333]">$89.99 / one-time payment</p>
+              <p class="text-[1.4rem] text-[#333333]">$299.99 / one-time payment</p>
               <ul class="flex flex-col gap-1">
                 <li class="text-[#28a745] flex items-center gap-2">
                   <i class="fa-solid fa-circle-check"></i>
@@ -90,7 +91,8 @@ get_header();
               <div>
                 <a
                   href="#"
-                  class="bg-[var(--primary)] relative rounded-md text-base top-[20px] text-white px-[24px] py-[12px]"
+                  class="bg-[var(--primary)] relative rounded-md text-base top-[20px] text-white px-[24px] py-[12px] submit-tool-btn"
+                  data-package-type="premium"
                   >Get Started</a
                 >
               </div>
@@ -151,6 +153,10 @@ get_header();
           </div>
         </div>
       </section>
+      
+      <!-- AI Submission Modal -->
+      <?php get_template_part('inc/ai-submission-modal'); ?>
+      
       <!-- FAQ Section -->
       <section class="flex flex-col gap-[32px] py-10 max-w-[1440px] mx-auto">
         <div class="flex flex-col gap-1">
@@ -243,3 +249,53 @@ get_header();
     </section>
 
 <?php get_footer(); ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all submit tool buttons
+    const submitButtons = document.querySelectorAll('.submit-tool-btn');
+    
+    // Get the modal elements
+    const modal = document.getElementById('aiSubmissionModal');
+    const packageTypeInput = document.getElementById('packageType');
+    const packageTypeSelect = document.getElementById('package_type_select');
+    
+    // Add click event listeners to all submit buttons
+    submitButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const packageType = this.getAttribute('data-package-type');
+            
+            // Set the package type in both hidden input and select
+            if (packageType) {
+                packageTypeInput.value = packageType;
+                packageTypeSelect.value = packageType;
+                
+                // Show the modal
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            }
+        });
+    });
+    
+    // Close modal function
+    window.closeModal = function() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = ''; // Re-enable scrolling
+    };
+    
+    // Close modal when clicking outside the modal content
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+});
+</script>
