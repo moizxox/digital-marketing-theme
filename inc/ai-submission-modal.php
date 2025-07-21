@@ -78,6 +78,7 @@
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="basic">Basic Package ($49.99)</option>
                                 <option value="premium">Premium Package ($299.99)</option>
+                                <option value="ultimate">Ultimate Exposure Package ($999)</option>
                             </select>
                         </div>
                         
@@ -240,8 +241,12 @@ document.querySelector('#aiToolForm').addEventListener('submit', function(e) {
                 if (packageType === 'basic') {
                     window.location.href = 'https://buy.stripe.com/4gM7sL2Eq34l6jN4wz5J60k';
                 } else if (packageType === 'premium') {
+                    window.location.href = 'https://buy.stripe.com/7sYfZhbaWbAR4bFd355J60l';
+                } 
+                else if (packageType === 'ultimate') {
                     window.location.href = 'https://buy.stripe.com/eVq28r6UG48pgYr8MP5J60m';
-                } else {
+                }
+                else {
                     alert('Invalid package type selected.');
                 }
             }, 5000);
