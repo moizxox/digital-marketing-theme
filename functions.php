@@ -815,9 +815,25 @@ function handle_start_ai_tools_import()
         wp_send_json_error('File upload error: ' . $file['error']);
     }
 
-    // Parse the CSV into chunks
-    $csv_data = array_map('str_getcsv', file($file['tmp_name']));
-    $header = array_shift($csv_data);
+    // Parse the CSV into chunks with proper multiline field handling
+    $csv_data = array();
+    $header = array();
+    
+    // Open the CSV file with error handling
+    if (($handle = fopen($file['tmp_name'], 'r')) !== FALSE) {
+        // Get the header row
+        $header = fgetcsv($handle);
+        
+        // Read the rest of the file
+        while (($row = fgetcsv($handle)) !== FALSE) {
+            $csv_data[] = $row;
+        }
+        
+        fclose($handle);
+    } else {
+        wp_send_json_error('Failed to open the uploaded file');
+    }
+    
     $chunks = array_chunk($csv_data, 50);  // 50 rows per chunk
 
     // Store chunks in a transient (expires in 1 hour)
@@ -1431,9 +1447,25 @@ function handle_start_ai_agents_import()
         wp_send_json_error('File upload error: ' . $file['error']);
     }
 
-    // Parse the CSV into chunks
-    $csv_data = array_map('str_getcsv', file($file['tmp_name']));
-    $header = array_shift($csv_data);
+    // Parse the CSV into chunks with proper multiline field handling
+    $csv_data = array();
+    $header = array();
+    
+    // Open the CSV file with error handling
+    if (($handle = fopen($file['tmp_name'], 'r')) !== FALSE) {
+        // Get the header row
+        $header = fgetcsv($handle);
+        
+        // Read the rest of the file
+        while (($row = fgetcsv($handle)) !== FALSE) {
+            $csv_data[] = $row;
+        }
+        
+        fclose($handle);
+    } else {
+        wp_send_json_error('Failed to open the uploaded file');
+    }
+    
     $chunks = array_chunk($csv_data, 50);  // 50 rows per chunk
 
     // Store chunks in a transient (expires in 1 hour)
