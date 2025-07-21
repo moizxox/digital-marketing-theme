@@ -893,6 +893,9 @@ function process_ai_tools_chunk($rows, $header)
     if (!function_exists('media_handle_upload')) {
         require_once (ABSPATH . 'wp-admin/includes/media.php');
     }
+    
+    // Force all header values to be treated as strings
+    $header = array_map('strval', $header);
     $errors = array();
     $imported = 0;
 
@@ -942,25 +945,34 @@ function process_ai_tools_chunk($rows, $header)
                 require_once (ABSPATH . 'wp-includes/taxonomy.php');
             }
 
-            // Handle categories
+            // Handle categories - ensure they are properly formatted as strings
             if (!empty($data['label'])) {
                 $categories = array_map('trim', explode(',', $data['label']));
                 $category_terms = array();
 
                 foreach ($categories as $category) {
+                    $category = trim($category);
                     if (!empty($category)) {
+                        // Convert numeric categories to strings to prevent them from being treated as term IDs
+                        $category = is_numeric($category) ? 'cat_' . $category : $category;
+                        
                         $term = term_exists($category, 'ai-tool-category');
                         if (!$term) {
                             $term = wp_insert_term($category, 'ai-tool-category');
                         }
                         if (!is_wp_error($term) && isset($term['term_id'])) {
-                            $category_terms[] = $term['term_id'];
+                            $category_terms[] = (int)$term['term_id'];
+                        } else if (is_wp_error($term)) {
+                            $errors[] = "Error processing category '{$category}': " . $term->get_error_message();
                         }
                     }
                 }
 
                 if (!empty($category_terms)) {
-                    wp_set_object_terms($post_id, $category_terms, 'ai-tool-category');
+                    $result = wp_set_object_terms($post_id, $category_terms, 'ai-tool-category');
+                    if (is_wp_error($result)) {
+                        $errors[] = "Error setting categories: " . $result->get_error_message();
+                    }
                 }
             }
 
@@ -973,25 +985,34 @@ function process_ai_tools_chunk($rows, $header)
                 }
             }
 
-            // Handle pricing options
+            // Handle pricing options - ensure they are properly formatted as strings
             if (!empty($data['pricing model'])) {
                 $pricing_options = array_map('trim', explode(',', $data['pricing model']));
                 $pricing_terms = array();
 
                 foreach ($pricing_options as $option) {
+                    $option = trim($option);
                     if (!empty($option)) {
+                        // Convert numeric pricing options to strings to prevent them from being treated as term IDs
+                        $option = is_numeric($option) ? 'price_' . $option : $option;
+                        
                         $term = term_exists($option, 'ai-tool-pricing-option');
                         if (!$term) {
                             $term = wp_insert_term($option, 'ai-tool-pricing-option');
                         }
                         if (!is_wp_error($term) && isset($term['term_id'])) {
-                            $pricing_terms[] = $term['term_id'];
+                            $pricing_terms[] = (int)$term['term_id'];
+                        } else if (is_wp_error($term)) {
+                            $errors[] = "Error processing pricing option '{$option}': " . $term->get_error_message();
                         }
                     }
                 }
 
                 if (!empty($pricing_terms)) {
-                    wp_set_object_terms($post_id, $pricing_terms, 'ai-tool-pricing-option');
+                    $result = wp_set_object_terms($post_id, $pricing_terms, 'ai-tool-pricing-option');
+                    if (is_wp_error($result)) {
+                        $errors[] = "Error setting pricing options: " . $result->get_error_message();
+                    }
                 }
             }
 
@@ -1488,7 +1509,10 @@ function process_ai_agents_chunk($rows, $header)
     if (!function_exists('media_handle_upload')) {
         require_once (ABSPATH . 'wp-admin/includes/media.php');
     }
-
+    
+    // Force all header values to be treated as strings
+    $header = array_map('strval', $header);
+    
     $errors = array();
     $imported = 0;
 
@@ -1523,25 +1547,34 @@ function process_ai_agents_chunk($rows, $header)
                 throw new Exception($post_id->get_error_message());
             }
 
-            // Handle categories
+            // Handle categories - ensure they are properly formatted as strings
             if (!empty($data['label'])) {
                 $categories = array_map('trim', explode(',', $data['label']));
                 $category_terms = array();
 
                 foreach ($categories as $category) {
+                    $category = trim($category);
                     if (!empty($category)) {
+                        // Convert numeric categories to strings to prevent them from being treated as term IDs
+                        $category = is_numeric($category) ? 'cat_' . $category : $category;
+                        
                         $term = term_exists($category, 'ai-agent-category');
                         if (!$term) {
                             $term = wp_insert_term($category, 'ai-agent-category');
                         }
                         if (!is_wp_error($term) && isset($term['term_id'])) {
-                            $category_terms[] = $term['term_id'];
+                            $category_terms[] = (int)$term['term_id'];
+                        } else if (is_wp_error($term)) {
+                            $errors[] = "Error processing category '{$category}': " . $term->get_error_message();
                         }
                     }
                 }
 
                 if (!empty($category_terms)) {
-                    wp_set_object_terms($post_id, $category_terms, 'ai-agent-category');
+                    $result = wp_set_object_terms($post_id, $category_terms, 'ai-agent-category');
+                    if (is_wp_error($result)) {
+                        $errors[] = "Error setting categories: " . $result->get_error_message();
+                    }
                 }
             }
 
@@ -1554,25 +1587,34 @@ function process_ai_agents_chunk($rows, $header)
                 }
             }
 
-            // Handle pricing options
+            // Handle pricing options - ensure they are properly formatted as strings
             if (!empty($data['pricing model'])) {
                 $pricing_options = array_map('trim', explode(',', $data['pricing model']));
                 $pricing_terms = array();
 
                 foreach ($pricing_options as $option) {
+                    $option = trim($option);
                     if (!empty($option)) {
+                        // Convert numeric pricing options to strings to prevent them from being treated as term IDs
+                        $option = is_numeric($option) ? 'price_' . $option : $option;
+                        
                         $term = term_exists($option, 'ai-agent-pricing-option');
                         if (!$term) {
                             $term = wp_insert_term($option, 'ai-agent-pricing-option');
                         }
                         if (!is_wp_error($term) && isset($term['term_id'])) {
-                            $pricing_terms[] = $term['term_id'];
+                            $pricing_terms[] = (int)$term['term_id'];
+                        } else if (is_wp_error($term)) {
+                            $errors[] = "Error processing pricing option '{$option}': " . $term->get_error_message();
                         }
                     }
                 }
 
                 if (!empty($pricing_terms)) {
-                    wp_set_object_terms($post_id, $pricing_terms, 'ai-agent-pricing-option');
+                    $result = wp_set_object_terms($post_id, $pricing_terms, 'ai-agent-pricing-option');
+                    if (is_wp_error($result)) {
+                        $errors[] = "Error setting pricing options: " . $result->get_error_message();
+                    }
                 }
             }
 
