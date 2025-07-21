@@ -218,44 +218,97 @@ function removeFeature(button) {
 
 document.querySelector('#aiToolForm').addEventListener('submit', function(e) {
     e.preventDefault();
-
+    
     const form = e.target;
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.innerHTML;
+    
+    // Show loading state
+    submitButton.disabled = true;
+    submitButton.innerHTML = 'Submitting...';
+    
+    // Get the selected package type from the hidden input
+    const packageType = document.getElementById('packageType').value;
+    
+    if (!packageType) {
+        alert('Please select a package type.');
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalButtonText;
+        return;
+    }
+    
     const formData = new FormData(form);
     formData.append('action', 'submit_ai_tool');
     formData.append('nonce', '<?php echo wp_create_nonce('submit_ai_tool_nonce'); ?>');
-
+    formData.append('package_type_select', packageType);  // Make sure package type is included
+    
+    console.log('Submitting form with package type:', packageType);
+    
     fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'same-origin'
     })
-    .then(res => res.json())
-    .then(response => {
-        if (response.success) {
+    .then(async response => {
+        console.log('Response received. Status:', response.status, response.statusText);
+        
+        // Get the response text first for debugging
+        const responseText = await response.text();
+        console.log('Raw response text:', responseText);
+        
+        let responseData;
+        try {
+            responseData = JSON.parse(responseText);
+        } catch (e) {
+            console.error('Failed to parse JSON response:', e);
+            throw new Error('Invalid JSON response from server');
+        }
+        
+        console.log('Parsed response data:', responseData);
+        
+        if (responseData && responseData.success) {
+            // Show success message
             document.getElementById('thankYouPopup').classList.remove('hidden');
             closeModal();
-
+            
+            // Redirect to payment after delay
             setTimeout(() => {
                 document.getElementById('thankYouPopup').classList.add('hidden');
-                const packageType = formData.get('package_type_select');
-
-                if (packageType === 'basic') {
-                    window.location.href = 'https://buy.stripe.com/4gM7sL2Eq34l6jN4wz5J60k';
-                } else if (packageType === 'premium') {
-                    window.location.href = 'https://buy.stripe.com/7sYfZhbaWbAR4bFd355J60l';
-                } 
-                else if (packageType === 'ultimate') {
-                    window.location.href = 'https://buy.stripe.com/eVq28r6UG48pgYr8MP5J60m';
+                
+                // Ensure we use the package type from the hidden field
+                const pkgType = document.getElementById('packageType').value;
+                console.log('Redirecting for package type:', pkgType);
+                
+                const redirectUrls = {
+                    'basic': 'https://buy.stripe.com/4gM7sL2Eq34l6jN4wz5J60k',
+                    'premium': 'https://buy.stripe.com/7sYfZhbaWbAR4bFd355J60l',
+                    'ultimate': 'https://buy.stripe.com/eVq28r6UG48pgYr8MP5J60m'
+                };
+                
+                if (redirectUrls[pkgType]) {
+                    console.log('Redirecting to:', redirectUrls[pkgType]);
+                    window.location.href = redirectUrls[pkgType];
+                } else {
+                    console.error('Invalid package type for redirect:', pkgType);
+                    alert('Thank you for your submission! We will contact you shortly.');
                 }
-                else {
-                    alert('Invalid package type selected.');
-                }
-            }, 5000);
+            }, 3000);
         } else {
-            alert(response.data?.message || 'Submission failed. Please try again.');
+            // Show error message from server
+            const errorMsg = responseData.data?.message || 
+                           responseData.message || 
+                           'Submission failed. Please try again.';
+            console.error('Server error:', errorMsg);
+            alert(errorMsg);
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonText;
         }
     })
-    .catch(() => {
-        alert('An error occurred while submitting the form.');
+    .catch(error => {
+        console.error('Error during form submission:', error);
+        alert('An error occurred while submitting the form. Please try again or contact support.');
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalButtonText;
     });
 });
 

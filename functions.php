@@ -2288,43 +2288,132 @@ class Custom_Nav_Walker extends Walker_Nav_Menu
 add_action('wp_ajax_submit_ai_tool', 'handle_ai_tool_submission');
 add_action('wp_ajax_nopriv_submit_ai_tool', 'handle_ai_tool_submission');
 
-function handle_ai_tool_submission()
-{
+function handle_ai_tool_submission() {
+    // Debug log
+    error_log('AI Tool Submission Started');
+    
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'submit_ai_tool_nonce')) {
+        error_log('Security check failed');
         wp_send_json_error(['message' => 'Security check failed']);
     }
 
-    $tool_name = sanitize_text_field($_POST['tool_name']);
-    $email = sanitize_email($_POST['email']);
-    $website_url = esc_url_raw($_POST['website_url']);
-    $category = sanitize_text_field($_POST['category']);
-    $other_category = sanitize_text_field($_POST['other_category']);
-    $pricing_model = sanitize_text_field($_POST['pricing_model']);
-    $package_type = sanitize_text_field($_POST['package_type_select']);
-    $short_desc = sanitize_textarea_field($_POST['short_description']);
-    $full_desc = sanitize_textarea_field($_POST['full_description']);
-    $features = isset($_POST['features']) ? array_map('sanitize_text_field', $_POST['features']) : [];
+    try {
+        // Get and sanitize form data
+        $tool_name = isset($_POST['tool_name']) ? sanitize_text_field($_POST['tool_name']) : '';
+        $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+        $website_url = isset($_POST['website_url']) ? esc_url_raw($_POST['website_url']) : '';
+        $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '';
+        $other_category = isset($_POST['other_category']) ? sanitize_text_field($_POST['other_category']) : '';
+        $pricing_model = isset($_POST['pricing_model']) ? sanitize_text_field($_POST['pricing_model']) : '';
+        $package_type = isset($_POST['package_type_select']) ? sanitize_text_field($_POST['package_type_select']) : '';
+        $short_desc = isset($_POST['short_description']) ? sanitize_textarea_field($_POST['short_description']) : '';
+        $full_desc = isset($_POST['full_description']) ? sanitize_textarea_field($_POST['full_description']) : '';
+        $features = isset($_POST['features']) ? array_map('sanitize_text_field', $_POST['features']) : [];
 
-    $all_features = implode(', ', $features);
-    $admin_email = get_option('admin_email');
+        $all_features = !empty($features) ? implode(",\n  - ", $features) : 'None specified';
+        $admin_email = get_option('admin_email');
+        $site_name = get_bloginfo('name');
+        $site_url = get_bloginfo('url');
 
-    $subject = "New AI Tool Submission: $tool_name";
-    $message = "A new tool has been submitted.\n\n"
-        . "Tool Name: $tool_name\n"
-        . "Email: $email\n"
-        . "Website: $website_url\n"
-        . "Category: $category\n"
-        . "Other Category: $other_category\n"
-        . "Pricing Model: $pricing_model\n"
-        . "Package Type: $package_type\n"
-        . "Short Description: $short_desc\n"
-        . "Full Description: $full_desc\n"
-        . "Features: $all_features";
+        // Admin Email
+        $admin_subject = "[{$site_name}] New AI Tool Submission: {$tool_name}";
+        $admin_message = "A new AI tool has been submitted to {$site_name}:
 
-    $headers = ['Content-Type: text/plain; charset=UTF-8'];
+Tool Details:
+- Name: {$tool_name}
+- Website: {$website_url}
+- Submitted by: {$email}
+- Category: {$category}" . 
+        ($other_category ? "\n- Custom Category: {$other_category}" : "") . "
+- Pricing Model: {$pricing_model}
+- Package Type: {$package_type}
 
-    wp_mail($admin_email, $subject, $message, $headers);
-    wp_mail($email, 'Thank you for submitting your AI tool', "Dear user,\n\nWe received your submission for '$tool_name'. We’ll review it shortly.\n\nThanks!", $headers);
+Description:
+{$short_desc}
 
-    wp_send_json_success(['message' => 'Form submitted and emails sent']);
+Full Description:
+{$full_desc}
+
+Features:
+- {$all_features}
+
+---
+This is an automated message from {$site_name} ({$site_url})";
+
+        // User Email
+        $user_subject = "Thank you for submitting {$tool_name} to {$site_name}";
+        $user_message = "Dear Subscriber,
+
+Thank you for submitting your AI tool '{$tool_name}' to {$site_name}. We've received the following details:
+
+- Tool Name: {$tool_name}
+- Website: {$website_url}
+- Category: {$category}" . 
+        ($other_category ? "\n- Custom Category: {$other_category}" : "") . "
+- Package: {$package_type}
+
+We will review your submission and get back to you shortly. If we need any additional information, we'll contact you at {$email}.
+
+Best regards,
+The {$site_name} Team
+{$site_url}";
+
+        // Set headers
+        $headers = [
+            'Content-Type: text/plain; charset=UTF-8',
+            'From: ' . $site_name . ' <' . $admin_email . '>',
+            'Reply-To: ' . $admin_email
+        ];
+
+        // Check if we're in a local development environment
+        $is_local = (strpos(home_url(), 'localhost') !== false || 
+                    strpos(home_url(), '.local') !== false || 
+                    strpos(home_url(), '127.0.0.1') !== false);
+
+        if ($is_local) {
+            // In local environment, just log the emails instead of sending
+            error_log('Local environment detected. Emails will be logged instead of sent.');
+            error_log('--- ADMIN EMAIL ---');
+            error_log('To: ' . $admin_email);
+            error_log('Subject: ' . $admin_subject);
+            error_log('Body: ' . $admin_message);
+            error_log('-------------------');
+            
+            error_log('--- USER EMAIL ---');
+            error_log('To: ' . $email);
+            error_log('Subject: ' . $user_subject);
+            error_log('Body: ' . $user_message);
+            error_log('-------------------');
+            
+            $admin_sent = true;
+            $user_sent = true;
+        } else {
+            // In production, actually send the emails
+            $admin_sent = wp_mail($admin_email, $admin_subject, $admin_message, $headers);
+            $user_sent = wp_mail($email, $user_subject, $user_message, $headers);
+
+            // Debug log
+            error_log('Admin email ' . ($admin_sent ? 'sent successfully' : 'failed to send') . ' to ' . $admin_email);
+            error_log('User email ' . ($user_sent ? 'sent successfully' : 'failed to send') . ' to ' . $email);
+        }
+
+        // Only throw error in production if emails fail
+        if (!$is_local && (!$admin_sent || !$user_sent)) {
+            $error_msg = 'Email sending failed. ';
+            $error_msg .= !$admin_sent ? 'Admin email failed. ' : '';
+            $error_msg .= !$user_sent ? 'User email failed.' : '';
+            throw new Exception($error_msg);
+        }
+
+        wp_send_json_success([
+            'message' => 'Thank you for your submission! We\'ve sent a confirmation email to ' . $email
+        ]);
+
+    } catch (Exception $e) {
+        error_log('Error in handle_ai_tool_submission: ' . $e->getMessage());
+        wp_send_json_error([
+            'message' => 'There was an error processing your submission. Please try again or contact support.',
+            'debug' => WP_DEBUG ? $e->getMessage() : ''
+        ]);
+    }
 }
