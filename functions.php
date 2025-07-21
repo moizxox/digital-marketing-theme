@@ -992,18 +992,37 @@ function process_ai_tools_chunk($rows, $header)
                 }
             }
 
-            // Handle features as tags
+            // Handle features as tags - check both 'Features' and 'features' for backward compatibility
+            $features = '';
             if (!empty($data['Features'])) {
-                $features = array_map('trim', explode(',', $data['Features']));
+                $features = $data['Features'];
+            } elseif (!empty($data['features'])) {
+                $features = $data['features'];
+            }
+            
+            if (!empty($features)) {
+                $features = array_map('trim', explode(',', $features));
                 $features = array_filter($features);
                 if (!empty($features)) {
-                    wp_set_object_terms($post_id, $features, 'ai-tool-tag');
+                    $result = wp_set_object_terms($post_id, $features, 'ai-tool-tag');
+                    if (is_wp_error($result)) {
+                        $errors[] = 'Error setting tags: ' . $result->get_error_message();
+                    }
                 }
             }
 
-            // Handle pricing options - ensure they are properly formatted as strings
+            // Handle pricing options - check multiple possible column names
+            $pricing_model = '';
             if (!empty($data['pricing model'])) {
-                $pricing_options = array_map('trim', explode(',', $data['pricing model']));
+                $pricing_model = $data['pricing model'];
+            } elseif (!empty($data['pricing_model'])) {
+                $pricing_model = $data['pricing_model'];
+            } elseif (!empty($data['pricing'])) {
+                $pricing_model = $data['pricing'];
+            }
+            
+            if (!empty($pricing_model)) {
+                $pricing_options = array_map('trim', explode(',', $pricing_model));
                 $pricing_terms = array();
 
                 foreach ($pricing_options as $option) {
@@ -1037,17 +1056,39 @@ function process_ai_tools_chunk($rows, $header)
                 require_once (ABSPATH . 'wp-includes/post.php');
             }
 
-            // Set meta fields
+            // Set meta fields - handle different column name variations
             if (!empty($data['web url'])) {
                 update_post_meta($post_id, '_website_url', esc_url_raw($data['web url']));
+            } elseif (!empty($data['website_url'])) {
+                update_post_meta($post_id, '_website_url', esc_url_raw($data['website_url']));
+            } elseif (!empty($data['url'])) {
+                update_post_meta($post_id, '_website_url', esc_url_raw($data['url']));
             }
 
+            // Handle price with different column name variations
+            $price = '';
             if (!empty($data['option price'])) {
-                update_post_meta($post_id, '_amount', sanitize_text_field($data['option price']));
+                $price = $data['option price'];
+            } elseif (!empty($data['option_price'])) {
+                $price = $data['option_price'];
+            } elseif (!empty($data['price'])) {
+                $price = $data['price'];
+            }
+            
+            if (!empty($price)) {
+                update_post_meta($post_id, '_amount', sanitize_text_field($price));
             }
 
+            // Handle currency with different column name variations
+            $currency = '';
             if (!empty($data['currency'])) {
-                update_post_meta($post_id, '_currency', sanitize_text_field($data['currency']));
+                $currency = $data['currency'];
+            } elseif (!empty($data['currency_code'])) {
+                $currency = $data['currency_code'];
+            }
+            
+            if (!empty($currency)) {
+                update_post_meta($post_id, '_currency', sanitize_text_field($currency));
             }
 
             // Handle logo image
@@ -1651,19 +1692,40 @@ function process_ai_agents_chunk($rows, $header)
                 }
             }
 
-            // Set meta fields
+            // Set meta fields - handle different column name variations
             if (!empty($data['web url'])) {
                 update_post_meta($post_id, '_website_url', esc_url_raw($data['web url']));
+            } elseif (!empty($data['website_url'])) {
+                update_post_meta($post_id, '_website_url', esc_url_raw($data['website_url']));
+            } elseif (!empty($data['url'])) {
+                update_post_meta($post_id, '_website_url', esc_url_raw($data['url']));
             }
 
+            // Handle price with different column name variations
+            $price = '';
             if (!empty($data['option price'])) {
-                update_post_meta($post_id, '_amount', sanitize_text_field($data['option price']));
+                $price = $data['option price'];
+            } elseif (!empty($data['option_price'])) {
+                $price = $data['option_price'];
+            } elseif (!empty($data['price'])) {
+                $price = $data['price'];
+            }
+            
+            if (!empty($price)) {
+                update_post_meta($post_id, '_amount', sanitize_text_field($price));
             }
 
+            // Handle currency with different column name variations
+            $currency = '';
             if (!empty($data['currency'])) {
-                update_post_meta($post_id, '_currency', sanitize_text_field($data['currency']));
+                $currency = $data['currency'];
+            } elseif (!empty($data['currency_code'])) {
+                $currency = $data['currency_code'];
             }
-
+            
+            if (!empty($currency)) {
+                update_post_meta($post_id, '_currency', sanitize_text_field($currency));
+            }
             // Handle logo image
             if (!empty($data['logo'])) {
                 $logo_url = esc_url_raw($data['logo']);
