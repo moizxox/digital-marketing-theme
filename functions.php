@@ -2084,9 +2084,13 @@ function ajax_filter_ai_tools()
                     <?php else: ?>
                         <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover rounded-md" />
                     <?php endif; ?>
-                    <h1 class="text-[#1B1D1F] text-[20px] font-semibold"><?php the_title(); ?></h1>
+                    <h1 class="text-[#1B1D1F] text-[21px] font-semibold"><?php the_title(); ?></h1>
                     <p class="text-[#5A6478] text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
-
+                    <div class="mt-auto">
+                        <button class="explore-btn">
+                            <?php _e('Explore', 'wb'); ?>
+                        </button>
+                    </div>
                 </div>
             </a>
             <?php
@@ -2225,8 +2229,13 @@ function filter_ai_agents_callback()
                     <?php else: ?>
                         <img src="https://digitalmarketingsupermarket.com/wp-content/uploads/2025/05/Saly-1.png" alt="<?php the_title(); ?>" class="w-full h-[210px] object-cover rounded-md" />
                     <?php endif; ?>
-                    <h1 class="text-[#1B1D1F] text-[20px] font-semibold"><?php the_title(); ?></h1>
+                    <h1 class="text-[#1B1D1F] text-[21px] font-semibold"><?php the_title(); ?></h1>
                     <p class="text-[#5A6478] text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+                    <div class="mt-auto">
+                        <button class="explore-btn">
+                            <?php _e('Explore', 'wb'); ?>
+                        </button>
+                    </div>
                 </div>
             </a>
             <?php

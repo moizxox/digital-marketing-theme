@@ -20,6 +20,26 @@ $pricing_options = get_terms(array(
     color: #fff;
 	background-color: var(--primary);
   }
+  .explore-btn {
+        background-color: var(--primary);
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        transition: background-color 0.2s ease;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+    }
+    
+    .explore-btn:hover {
+        background-color: #002292;
+        color: #fff;
+    }
+    
+    /* Ensure button text stays white on hover */
+    .explore-btn:hover {
+        color: #fff !important;
+    }
 </style>
 
 <!-- Loading Indicator -->
@@ -250,6 +270,11 @@ $pricing_options = get_terms(array(
 									<?php endif; ?>
 									<h1 class="text-[#1B1D1F] text-[20px] font-semibold"><?php the_title(); ?></h1>
 									<p class="text-[#5A6478] text-[14px] font-normal"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+									<div class="mt-auto">
+										<button class="explore-btn bg-[var(--primary)] text-white px-4 py-2 rounded-md hover:bg-[var(--primary-dark)] transition-colors">
+											<?php _e('Explore', 'wb'); ?>
+										</button>
+									</div>
 								</div>
 							</a>
 						<?php
