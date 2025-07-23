@@ -1,39 +1,45 @@
 <?php
 
-class Suggestion extends WB_Plugin {
-
-	public function action_current_screen($current_screen) {
+class Suggestion extends WB_Plugin
+{
+	public function action_current_screen($current_screen)
+	{
 		if ($current_screen->base !== 'edit') {
 			return;
 		}
 
-		?>
-		<script type="text/javascript">
-			window.onload = function () {
+		// Enqueue script inline at footer
+		add_action('admin_footer', function () use ($current_screen) {
+			$post_type = esc_js($current_screen->post_type);
+			$ajax_url = esc_url(admin_url('admin-ajax.php'));
+			?>
+			<script type="text/javascript">
 				jQuery(function ($) {
 					if ($('#post-search-input').length) {
 						$('#post-search-input')
 							.prop('autocomplete', 'off')
 							.autocomplete({
-								source: '<?php echo admin_url('admin-ajax.php'); ?>?action=suggest&type=<?php echo $current_screen->post_type; ?>',
+								source: '<?php echo $ajax_url; ?>?action=suggest&type=<?php echo $post_type; ?>',
 								select: function (event, ui) {
 									location.href = ui.item.value.replace(/&amp;/g, '&');
 								}
 							});
 					}
 				});
-			};
-		</script>
-		<?php
+			</script>
+			<?php
+		});
 	}
 
-	public function filter_query_vars($vars) {
+	public function filter_query_vars($vars)
+	{
 		$vars[] = 'suggest';
 
 		return $vars;
 	}
 
-	public function action_rewrite_rules_array($rules) {
+	public function action_rewrite_rules_array($rules)
+	{
 		$new_rules = array();
 
 		$search_page = wb_get_page_by_template('search');
@@ -42,12 +48,13 @@ class Suggestion extends WB_Plugin {
 			return $rules;
 		}
 
-		$new_rules[$search_page->post_name . '/suggest/?$']  = 'index.php?pagename=' . $search_page->post_name .'&suggest=1';
+		$new_rules[$search_page->post_name . '/suggest/?$'] = 'index.php?pagename=' . $search_page->post_name . '&suggest=1';
 
 		return $new_rules + $rules;
 	}
 
-	public function action_template_redirect() {
+	public function action_template_redirect()
+	{
 		$suggest = get_query_var('suggest');
 
 		if ($suggest) {
@@ -130,7 +137,8 @@ class Suggestion extends WB_Plugin {
 		}
 	}
 
-	public function action_wp_ajax_suggest() {
+	public function action_wp_ajax_suggest()
+	{
 		$type = (isset($_GET['type']) && in_array($_GET['type'], array('tool', 'course', 'service', 'ai-tool', 'ai-agent'))) ? $_GET['type'] : 'tool';
 		$term = isset($_GET['term']) ? esc_attr($_GET['term']) : '';
 
@@ -159,5 +167,4 @@ class Suggestion extends WB_Plugin {
 
 		exit;
 	}
-
 }
