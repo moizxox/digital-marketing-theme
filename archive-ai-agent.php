@@ -21,6 +21,9 @@ $pricing_options = get_terms(array(
         color: #fff;
         background-color: var(--primary);
     }
+    .filter-list li{
+        list-style: none !important;
+    }
 </style>
 
 <section class="py-16 text-white" style="background-color: var(--primary);">

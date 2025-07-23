@@ -15,11 +15,90 @@ $pricing_options = get_terms(array(
 
 ?>
 <style>
-	.category.active-btn {
+	.category-button.active-btn {
     border-color: var(--primary);
     color: #fff;
 	background-color: var(--primary);
   }
+</style>
+
+<!-- Loading Indicator -->
+<div id="loading-indicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+        <p class="mt-4 text-gray-700">Loading AI Tools...</p>
+    </div>
+</div>
+
+<style>
+    /* Filter sidebar styles */
+    .filter-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-section h3 {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #374151;
+    }
+    
+    .filter-search {
+        width: 100%;
+        padding: 0.5rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+    }
+    
+    .filter-list {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        scrollbar-width: thin;
+        scrollbar-color: #9ca3af #f3f4f6;
+    }
+    
+    .filter-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .filter-list::-webkit-scrollbar-track {
+        background: #f3f4f6;
+        border-radius: 3px;
+    }
+    
+    .filter-list::-webkit-scrollbar-thumb {
+        background-color: #9ca3af;
+        border-radius: 3px;
+    }
+    
+    .filter-list li {
+        margin-bottom: 0.5rem;
+        list-style: none;
+    }
+    
+    .filter-list label {
+        display: flex;
+        align-items: center;
+        padding: 0.375rem 0.5rem;
+        border-radius: 0.25rem;
+        transition: background-color 0.15s;
+    }
+    
+    .filter-list label:hover {
+        background-color: #f3f4f6;
+    }
+    
+    .filter-list input[type="checkbox"] {
+        margin-right: 0.5rem;
+    }
+    
+    .no-results {
+        color: #6b7280;
+        font-style: italic;
+        padding: 0.5rem 0;
+    }
 </style>
 
 <section class="py-16 text-white" style="background-color: var(--primary);">
@@ -42,7 +121,7 @@ $pricing_options = get_terms(array(
     foreach ($categories as $category):
         $is_active = $current_cat === $category->slug ? 'active-btn text-white' : '';
         ?>
-		<button class="category-button capitalize text-black bg-[#dfe5ff] px-4 py-2 rounded-lg m-1 border-[3px]  <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
+		<button class="category-button capitalize text-black bg-transparent px-4 py-2 rounded-lg m-1 border-[3px]  <?php echo $is_active; ?>" data-category="<?php echo $category->slug; ?>">
 			<?php echo $category->name; ?>
 		</button>
 	<?php endforeach; ?>
@@ -55,73 +134,57 @@ $pricing_options = get_terms(array(
 	<div class="container mx-auto px-4">
 		<div class="flex flex-col lg:flex-row gap-8">
 			<aside class="w-full lg:w-1/4">
-                <div class="mb-4 lg:hidden">
-                    <button id="filterToggle" class="bg-blue-600 text-white px-4 py-2 rounded-md w-full">
-                        Show Filters
-                    </button>
-                </div>
-                <div id="filterSidebar" class="bg-gray-100 p-6 rounded-lg hidden lg:block">
-                    <h2 class="text-xl font-semibold mb-6"><?php _e('Filter AI Tools', 'wb'); ?></h2>
-                    <form method="get" class="space-y-6">
-                        <!-- Features Section -->
-                        <div class="filter-section">
-                            <h3><?php _e('Features', 'wb'); ?></h3>
-                            <input type="text" id="featureSearch" placeholder="Search features..." class="filter-search">
-                            <div class="filter-list" id="featuresList">
-                                <?php
-                                $tags = get_terms(array('taxonomy' => 'ai-tool-tag', 'hide_empty' => false));
-                                if (!empty($tags) && !is_wp_error($tags)):
-                                    ?>
-                                    <ul class="space-y-2">
-                                        <?php foreach ($tags as $tag): ?>
-                                            <li>
-                                                <label class="flex items-center gap-2">
-                                                    <input type="checkbox" name="features[]" value="<?php echo $tag->slug; ?>" 
-                                                           <?php checked(in_array($tag->slug, $_GET['features'] ?? [])); ?> 
-                                                           class="form-checkbox feature-checkbox">
-                                                    <span class="feature-name"><?php echo $tag->name; ?></span>
-                                                </label>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                <?php else: ?>
-                                    <p class="no-results"><?php _e('No features available', 'wb'); ?></p>
-                                <?php endif; ?>
-                            </div>
-                        </div>
+				<div class="mb-4 lg:hidden">
+					<button id="filterToggle" class="bg-blue-600 text-white px-4 py-2 rounded-md w-full">
+						Show Filters
+					</button>
+				</div>
+				<div id="filterSidebar" class="bg-gray-100 p-6 rounded-lg hidden lg:block">
+					<h2 class="text-xl font-semibold mb-4"><?php _e('Filter AI Tools', 'wb'); ?></h2>
+					<form method="get" class="space-y-6">
+						<div>
+							<div class="filter-section">
+    <h3><?php _e('Features', 'wb'); ?></h3>
+    <input type="text" id="featureSearch" placeholder="Search features..." class="filter-search">
+    <div class="filter-list" id="featuresList">
+        <?php
+        $tags = get_terms(array('taxonomy' => 'ai-tool-tag', 'hide_empty' => false));
+        foreach ($tags as $tag):
+            ?>
+            <li>
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="features[]" value="<?php echo $tag->slug; ?>" 
+                           <?php checked(in_array($tag->slug, $_GET['features'] ?? [])); ?> 
+                           class="form-checkbox feature-checkbox">
+                    <span class="feature-name"><?php echo $tag->name; ?></span>
+                </label>
+            </li>
+        <?php endforeach; ?>
+    </div>
+</div>
 
-                        <!-- Pricing Options Section -->
-                        <div class="filter-section">
-                            <h3><?php _e('Pricing Options', 'wb'); ?></h3>
-                            <input type="text" id="pricingSearch" placeholder="Search pricing options..." class="filter-search">
-                            <div class="filter-list" id="pricingList">
-                                <?php
-                                $pricing_options = get_terms(array('taxonomy' => 'ai-tool-pricing-option', 'hide_empty' => false));
-                                if (!empty($pricing_options) && !is_wp_error($pricing_options)):
-                                    ?>
-                                    <ul class="space-y-2">
-                                        <?php foreach ($pricing_options as $option): ?>
-                                            <li>
-                                                <label class="flex items-center gap-2">
-                                                    <input type="checkbox" name="pricing[]" value="<?php echo $option->slug; ?>" 
-                                                           <?php checked(in_array($option->slug, $_GET['pricing'] ?? [])); ?> 
-                                                           class="form-checkbox pricing-checkbox">
-                                                    <span class="pricing-name"><?php echo $option->name; ?></span>
-                                                </label>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                <?php else: ?>
-                                    <p class="no-results"><?php _e('No pricing options available', 'wb'); ?></p>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
-                            <?php _e('Apply Filters', 'wb'); ?>
-                        </button>
-                    </form>
-                </div>
+<div class="filter-section">
+    <h3><?php _e('Pricing Options', 'wb'); ?></h3>
+    <input type="text" id="pricingSearch" placeholder="Search pricing options..." class="filter-search">
+    <div class="filter-list" id="pricingList">
+        <?php
+        $pricing_options = get_terms(array('taxonomy' => 'ai-tool-pricing-option', 'hide_empty' => false));
+        foreach ($pricing_options as $option):
+            ?>
+            <li>
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="pricing[]" value="<?php echo $option->slug; ?>" 
+                           <?php checked(in_array($option->slug, $_GET['pricing'] ?? [])); ?> 
+                           class="form-checkbox pricing-checkbox">
+                    <span class="pricing-name"><?php echo $option->name; ?></span>
+                </label>
+            </li>
+        <?php endforeach; ?>
+    </div>
+</div>
+						</div>
+					</form>
+				</div>
 			</aside>
 
 			<div class="w-full lg:w-3/4">
@@ -222,143 +285,58 @@ $pricing_options = get_terms(array(
 	</div>
 </main>
 
-<style>
-    /* Filter sidebar styles */
-    .filter-section {
-        margin-bottom: 1.5rem;
-    }
-    
-    .filter-section h3 {
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-        color: #374151;
-    }
-    
-    .filter-search {
-        width: 100%;
-        padding: 0.5rem;
-        margin-bottom: 0.75rem;
-        border: 1px solid #d1d5db;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-    }
-    
-    .filter-list {
-        max-height: 300px;
-        overflow-y: auto;
-        padding-right: 0.5rem;
-        scrollbar-width: thin;
-        scrollbar-color: #9ca3af #f3f4f6;
-    }
-    
-    .filter-list::-webkit-scrollbar {
-        width: 6px;
-    }
-    
-    .filter-list::-webkit-scrollbar-track {
-        background: #f3f4f6;
-        border-radius: 3px;
-    }
-    
-    .filter-list::-webkit-scrollbar-thumb {
-        background-color: #9ca3af;
-        border-radius: 3px;
-    }
-    
-    .filter-list li {
-        margin-bottom: 0.5rem;
-    }
-    
-    .filter-list label {
-        display: flex;
-        align-items: center;
-        padding: 0.375rem 0.5rem;
-        border-radius: 0.25rem;
-        transition: background-color 0.15s;
-    }
-    
-    .filter-list label:hover {
-        background-color: #f3f4f6;
-    }
-    
-    .filter-list input[type="checkbox"] {
-        margin-right: 0.5rem;
-    }
-    
-    .no-results {
-        color: #6b7280;
-        font-style: italic;
-        padding: 0.5rem 0;
-    }
-</style>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Toggle filter sidebar on mobile
-    const filterToggle = document.getElementById('filterToggle');
-    const filterSidebar = document.getElementById('filterSidebar');
-    
-    if (filterToggle && filterSidebar) {
-        filterToggle.addEventListener('click', function() {
-            filterSidebar.classList.toggle('hidden');
-            filterToggle.textContent = filterSidebar.classList.contains('hidden') ? 'Show Filters' : 'Hide Filters';
-        });
-    }
+document.addEventListener("DOMContentLoaded", function () {
+	const toggleBtn = document.getElementById("filterToggle");
+	const sidebar = document.getElementById("filterSidebar");
 
-    // Feature search functionality
-    const featureSearch = document.getElementById('featureSearch');
-    if (featureSearch) {
-        featureSearch.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const featureItems = document.querySelectorAll('#featuresList .feature-name');
-            
-            featureItems.forEach(item => {
-                const label = item.closest('li');
-                if (item.textContent.toLowerCase().includes(searchTerm)) {
-                    label.style.display = 'block';
-                } else {
-                    label.style.display = 'none';
-                }
-            });
-        });
-    }
+	if (toggleBtn) {
+		toggleBtn.addEventListener("click", function () {
+			if (sidebar.classList.contains("hidden")) {
+				sidebar.classList.remove("hidden");
+				toggleBtn.textContent = "Hide Filters";
+			} else {
+				sidebar.classList.add("hidden");
+				toggleBtn.textContent = "Show Filters";
+			}
+		});
+	}
 
-    // Pricing search functionality
-    const pricingSearch = document.getElementById('pricingSearch');
-    if (pricingSearch) {
-        pricingSearch.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const pricingItems = document.querySelectorAll('#pricingList .pricing-name');
-            
-            pricingItems.forEach(item => {
-                const label = item.closest('li');
-                if (item.textContent.toLowerCase().includes(searchTerm)) {
-                    label.style.display = 'block';
-                } else {
-                    label.style.display = 'none';
-                }
-            });
-        });
-    }
+	// Feature search functionality
+	const featureSearch = document.getElementById('featureSearch');
+	if (featureSearch) {
+		featureSearch.addEventListener('input', function(e) {
+			const searchTerm = e.target.value.toLowerCase();
+			const featureItems = document.querySelectorAll('#featuresList .feature-name');
+			
+			featureItems.forEach(item => {
+				const label = item.closest('li');
+				if (item.textContent.toLowerCase().includes(searchTerm)) {
+					label.style.display = 'block';
+				} else {
+					label.style.display = 'none';
+				}
+			});
+		});
+	}
 
-    // Handle category buttons
-    document.querySelectorAll(".category-button").forEach((button) => {
-        button.addEventListener("click", function() {
-            const category = this.getAttribute("data-category");
-            const url = new URL(window.location.href);
-
-            if (category) {
-                url.searchParams.set("category", category);
-            } else {
-                url.searchParams.delete("category");
-            }
-
-            // Reset to first page when changing category
-            url.searchParams.set("paged", 1);
-
-            window.location.href = url.toString();
-        });
-    });
+	// Pricing search functionality
+	const pricingSearch = document.getElementById('pricingSearch');
+	if (pricingSearch) {
+		pricingSearch.addEventListener('input', function(e) {
+			const searchTerm = e.target.value.toLowerCase();
+			const pricingItems = document.querySelectorAll('#pricingList .pricing-name');
+			
+			pricingItems.forEach(item => {
+				const label = item.closest('li');
+				if (item.textContent.toLowerCase().includes(searchTerm)) {
+					label.style.display = 'block';
+				} else {
+					label.style.display = 'none';
+				}
+			});
+		});
+	}
 });
 </script>
 
