@@ -427,10 +427,57 @@ jQuery(function ($) {
 	 */
 	if ($('.owl-carousel').length) {
 		$('.owl-carousel').each(function () {
-			var owl = $(this),
-				options = $(this).data();
-
-			$(this).owlCarousel(options);
+			var $owl = $(this);
+			
+			// Skip if already initialized
+			if ($owl.data('owl.carousel')) {
+				return;
+			}
+			
+			var options = {};
+			var data = $owl.data();
+			
+			// Parse boolean values
+			if (data.autoplay !== undefined) {
+				options.autoplay = data.autoplay === 'true' || data.autoplay === true;
+			}
+			if (data.nav !== undefined) {
+				options.nav = data.nav === 'true' || data.nav === true;
+			}
+			if (data.dots !== undefined) {
+				options.dots = data.dots === 'true' || data.dots === true;
+			}
+			if (data.loop !== undefined) {
+				options.loop = data.loop === 'true' || data.loop === true;
+			}
+			if (data.slidespeed !== undefined) {
+				options.smartSpeed = parseInt(data.slidespeed) || 200;
+			}
+			if (data.margin !== undefined) {
+				options.margin = parseInt(data.margin) || 54;
+			}
+			if (data.navText !== undefined) {
+				options.navText = data.navText;
+			}
+			
+			// Parse responsive settings
+			if (data.responsive !== undefined) {
+				var responsiveData = data.responsive;
+				if (typeof responsiveData === 'string') {
+					try {
+						responsiveData = JSON.parse(responsiveData.replace(/&quot;/g, '"'));
+					} catch(e) {
+						console.error('Error parsing responsive data:', e);
+						responsiveData = null;
+					}
+				}
+				if (responsiveData) {
+					options.responsive = responsiveData;
+				}
+			}
+			
+			// Initialize carousel
+			$owl.owlCarousel(options);
 		});
 	}
 

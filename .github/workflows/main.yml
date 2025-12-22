@@ -1,30 +1,30 @@
-name: 🚀 Deploy Theme to DreamHost via SFTP
+# name: 🚀 Deploy Theme to DreamHost via SFTP
 
-on:
-  push:
-    branches:
-      - main # 🌿 Trigger only on main branch
+# on:
+#   push:
+#     branches:
+#       - main # 🌿 Trigger only on main branch
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: 📥 Checkout code from GitHub
-        uses: actions/checkout@v3
+#     steps:
+#       - name: 📥 Checkout code from GitHub
+#         uses: actions/checkout@v3
 
-      - name: 📦 Prepare deployment
-        run: echo "Starting SFTP deployment to DreamHost..."
+#       - name: 📦 Prepare deployment
+#         run: echo "Starting SFTP deployment to DreamHost..."
 
-      - name: 🔐 Secure Upload via SFTP
-        uses: appleboy/scp-action@v1
-        with:
-          host: ${{ secrets.HOST }} # 🌐 Your DreamHost server
-          username: ${{ secrets.USERNAME }} # 👤 FTP/SFTP username
-          password: ${{ secrets.SFTP_PASSWORD }} # 🔑 Stored in GitHub secrets
-          port: 22 # 🚪 SFTP port
-          source: "!**/.git/**,**" # 📂 All files except .git folder
-          target: "/home/dh_5egysr/digitalmarketingsupermarket.com/wp-content/themes/digital-marketing-wordpress/" # 🎯 Theme path on server
+#       - name: 🔐 Secure Upload via SFTP
+#         uses: appleboy/scp-action@v1
+#         with:
+#           host: ${{ secrets.HOST }} # 🌐 Your DreamHost server
+#           username: ${{ secrets.USERNAME }} # 👤 FTP/SFTP username
+#           password: ${{ secrets.SFTP_PASSWORD }} # 🔑 Stored in GitHub secrets
+#           port: 22 # 🚪 SFTP port
+#           source: "!**/.git/**,**" # 📂 All files except .git folder
+#           target: "/home/dh_5egysr/digitalmarketingsupermarket.com/wp-content/themes/digital-marketing-wordpress/" # 🎯 Theme path on server
 
-      - name: ✅ Deployment finished
-        run: echo "🎉 Theme deployed successfully to DreamHost!"
+#       - name: ✅ Deployment finished
+#         run: echo "🎉 Theme deployed successfully to DreamHost!"
