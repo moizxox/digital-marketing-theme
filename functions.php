@@ -2319,6 +2319,16 @@ function handle_ai_tool_submission() {
         $full_desc = isset($_POST['full_description']) ? sanitize_textarea_field($_POST['full_description']) : '';
         $features = isset($_POST['features']) ? array_map('sanitize_text_field', $_POST['features']) : [];
 
+        // Validate required fields
+        if (empty($tool_name) || empty($email) || empty($website_url) || empty($category) || empty($package_type) || empty($short_desc) || empty($full_desc) || empty($features)) {
+            throw new Exception('Please fill in all required fields.');
+        }
+
+        // Validate email format
+        if (!is_email($email)) {
+            throw new Exception('Please provide a valid email address.');
+        }
+
         $all_features = !empty($features) ? implode(",\n  - ", $features) : 'None specified';
         $admin_email = get_option('admin_email');
         $site_name = get_bloginfo('name');
@@ -2406,16 +2416,22 @@ The {$site_name} Team
             error_log('User email ' . ($user_sent ? 'sent successfully' : 'failed to send') . ' to ' . $email);
         }
 
-        // Only throw error in production if emails fail
+        // Log email failures but don't block submission (user needs to proceed to payment)
         if (!$is_local && (!$admin_sent || !$user_sent)) {
             $error_msg = 'Email sending failed. ';
             $error_msg .= !$admin_sent ? 'Admin email failed. ' : '';
             $error_msg .= !$user_sent ? 'User email failed.' : '';
-            throw new Exception($error_msg);
+            error_log('WARNING: ' . $error_msg . ' Submission will still proceed to payment.');
+            // Don't throw exception - allow submission to proceed to payment
         }
 
+        // Return success message (email status doesn't affect payment flow)
+        $success_message = $user_sent || $is_local 
+            ? 'Thank you for your submission! We\'ve sent a confirmation email to ' . $email
+            : 'Thank you for your submission! You will be redirected to complete your payment.';
+        
         wp_send_json_success([
-            'message' => 'Thank you for your submission! We\'ve sent a confirmation email to ' . $email
+            'message' => $success_message
         ]);
 
     } catch (Exception $e) {
